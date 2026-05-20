@@ -1,0 +1,133 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Umoja Airways Check In Reminder
+    style.
+      /* Reset & Box Sizing */
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      
+      /* Base Styles */
+      body {
+        margin: 0;
+        padding: 10px;
+        background: #f4f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.4;
+      }
+      
+      /* Ticket Container */
+      .ticket {
+        max-width: 900px;
+        margin: 10px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      
+      /* Header Section */
+      .ticket-header {
+        background: linear-gradient(135deg, #2c3e50, rgb(236, 13, 13));
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+      
+      .ticket-header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      
+      .ticket-header p {
+        margin: 5px 0 0;
+        font-size: 14px;
+      }
+      
+      /* Ticket Body */
+      .ticket-body {
+        padding: 20px;
+      }
+      
+      /* Section Styling */
+      .section {
+        margin-bottom: 20px;
+        border-bottom: 1px dashed #ddd;
+        padding-bottom: 20px;
+      }
+      
+      .section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        border-bottom: 2px solid #4ca1af;
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+      
+      .details {
+        font-size: 14px;
+      }
+      
+      .details p {
+        margin: 5px 0;
+      }
+      
+      /* Table Styling */
+      table.details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      
+      table.details-table th,
+      table.details-table td {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      
+      table.details-table th {
+        background: #f7f7f7;
+        font-weight: bold;
+      }
+      
+      /* List Styling */
+      ul {
+        padding-left: 20px;
+        margin: 5px 0;
+      }
+      
+  body
+    .ticket
+      .ticket-header
+        //- Uncomment and add your logo if needed:
+        //- img.logo(src="./umoja_airways_logo.png", alt="Umoja Airways Logo", style="height:40px; position:absolute; left:20px; top:20px;")
+        //- img.logo(src=logoUrl, alt="Umoja Airways Logo", style="height:40px; position:absolute; left:20px; top:30px;")
+        h1 Umoja Airways Check In Reminder
+        p #{title}
+      .ticket-body
+        .section
+          .section-title Hi #{firstName},
+        .section
+          .section-title Check In Details
+          .details
+            p To ensure a smooth and hassle-free journey, please follow these check-in instructions:
+            p 1. **Check-In Period**: We recommend to arrive at the airport for checking in 2 hours before departure. The check in process allows you to select your seat, update informations on the booking ticker and obtain your boarding pass in advance. 
+            p 2. **Baggage Drop**: If you have checked baggage, please proceed to the baggage drop counter at the airport. Ensure you arrive at least 2 hours before your flight to allow sufficient time for baggage processing.
+            p 3. **Security Screening**: After dropping off your baggage, proceed to the security screening area. Have your boarding pass and a valid photo ID ready for inspection. Follow all security guidelines and remove any prohibited items from your carry-on luggage.
+            p 4. **Boarding Gate**: Once through security, proceed to your designated boarding gate. Boarding typically begins 45 minutes before departure. Listen for announcements and monitor the flight information displays for any updates.
+            p 5. **Required Documents**: Ensure you have all necessary travel documents, including your passport, visa (if applicable), and boarding pass. Keep these documents easily accessible throughout your journey.
+            p 6. **Special Assistance**: If you require special assistance, please inform our staff at the check-in counter or contact our customer service team in advance. We are here to help make your travel experience as comfortable as possible.
+            p Thank you for choosing Umoja Airways. We wish you a pleasant flight!

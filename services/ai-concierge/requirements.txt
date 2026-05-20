@@ -1,0 +1,37 @@
+fastapi
+geopy
+httpx
+google-generativeai
+
+# LangChain v1+ (includes create_agent)
+langchain>=1.0.0
+langchain-community>=0.0.40
+
+# LangGraph (library)
+langgraph>=1.0.0
+
+# LangGraph CLI (dev server with Redis)
+# langgraph-cli[redis]==0.4.9
+# langgraph-api
+redis
+pillow
+pinecone
+pydantic>=2
+pymongo
+python-dotenv
+requests
+rich
+sqlalchemy
+tavily-python
+uvicorn[standard]
+python-multipart
+psycopg[binary]
+pgvector
+sentence-transformers
+langchain_groq
+pytest
+pytest-asyncio
+amadeus
+requests
+jinja2
+aiortc

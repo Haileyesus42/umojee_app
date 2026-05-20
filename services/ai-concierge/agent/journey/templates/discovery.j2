@@ -1,0 +1,11 @@
+✨ **Expert Tip for {{ destination }}**
+
+Since you're interested in {{ interests | join(', ') }}, you absolutely shouldn't miss this:
+{{ recommendation_text }}
+
+{% if match_reasons %}
+**Why it's a great fit:**
+{% for reason in match_reasons %}
+• {{ reason }}
+{% endfor %}
+{% endif %}

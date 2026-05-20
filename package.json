@@ -1,0 +1,6 @@
+{
+  "name": "umojaairways-backend",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Umoja Airways backend monorepo (api, ai-concierge). See README.md."
+}

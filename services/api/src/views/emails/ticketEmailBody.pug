@@ -1,0 +1,206 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Electronic Ticket for Your Umoja Airways Payment
+    style.
+      /* Reset & Box Sizing */
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      
+      /* Base Styles */
+      body {
+        margin: 0;
+        padding: 10px;
+        background: #f4f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+        line-height: 1.4;
+      }
+      
+      /* Ticket Container */
+      .ticket {
+        max-width: 900px;
+        margin: 10px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      
+      /* Header Section */
+      .ticket-header {
+        background: linear-gradient(135deg, #2c3e50,rgb(236, 13, 13));
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+      
+      .ticket-header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      
+      .ticket-header p {
+        margin: 5px 0 0;
+        font-size: 14px;
+      }
+      
+      /* Ticket Body */
+      .ticket-body {
+        padding: 20px;
+      }
+      
+      /* Section Styling */
+      .section {
+        margin-bottom: 20px;
+        border-bottom: 1px dashed #ddd;
+        padding-bottom: 20px;
+      }
+      
+      .section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        border-bottom: 2px solid #4ca1af;
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+      
+      .details {
+        font-size: 14px;
+      }
+      
+      .details p {
+        margin: 5px 0;
+      }
+      
+      /* Table Styling */
+      table.details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      
+      table.details-table th,
+      table.details-table td {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      
+      table.details-table th {
+        background: #f7f7f7;
+        font-weight: bold;
+      }
+      
+      /* List Styling */
+      ul {
+        padding-left: 20px;
+        margin: 5px 0;
+      }
+      
+  body
+    .ticket
+      .ticket-header
+        //- Uncomment and add your logo if needed:
+        //- img.logo(src="./umoja_airways_logo.png", alt="Umoja Airways Logo", style="height:40px; position:absolute; left:20px; top:20px;")
+        img.logo(src=logoUrl, alt="Umoja Airways Logo", style="height:40px; position:absolute; left:20px; top:30px;")
+        h1 Electronic Ticket
+        p Umoja Airways Payment Confirmation
+      .ticket-body
+        .section
+          .section-title Passenger Information
+          .details
+            p
+              strong Ticket Number:
+              |  #{flight.referenceNumber}
+            p
+              strong Passenger Name:
+              ul
+                each passenger in passengers
+                  li #{passenger.title} #{passenger.firstName} #{passenger.lastName}
+            p
+              strong Name Ref:
+              |  ADT
+            p
+              strong Issue Date:
+              |  #{flight.createdAt}
+            p
+              strong Issuing Airline:
+              |  #{flight.flightData.airline || 'Umoja Airways'}
+            p
+              strong Issuing Agent:
+              |  Umoja Airways/ABC11
+            p
+              strong Issuing Agent Location:
+              |  FINCHA, ETHIOPIA
+        .section
+          .section-title Booking Reference
+          .details
+            p #{flight.referenceNumber}
+        .section
+          .section-title Itinerary Details
+          table.details-table
+            tr
+              th Flight
+              th Depart
+              th Arrive
+              th Cabin/Seat
+              th Baggage
+              th Flight Info
+            tr
+              td
+                | #{flight.flightData.flightNumber}
+                br
+                | Ok to fly
+              td
+                | #{flight.flightData.departureAirport}(#{flight.flightData.departureAirportAcronym})
+                br
+                | #{departureDate}
+              td
+                | #{flight.flightData.arrivalAirport}(#{flight.flightData.arrivalAirportAcronym})
+                br
+                | Terminal: #{flight.flightData.terminal}
+                br
+                | Gate: #{flight.flightData.gate}
+                br
+                | #{arrivalTime}
+              td Economy / M
+              td
+                | Check-in Required
+              td
+                | Not Valid Before: #{departureDate}
+                br
+                | Not Valid After: #{arrivalTime}
+        .section
+          .section-title Receipt And Payment Details
+          table.details-table
+            tr
+              th Fare
+              td USD #{flight.price}
+            tr
+              th Taxes/Fees/Carrier-Imposed Charges
+              td
+                ul
+                  li USD 0.00 (Service Fee - Carrier-Imposed Fuel)
+                  li USD 0.00 (Stamp Tax)
+                  li USD 0.00 (Airport Departure Tax)
+            tr
+              th Fare Calculation Line
+              td #{flight.flightData.arrivalAirportAcronym}
+            tr
+              th Form of Payment
+              td Stripe
+            tr
+              th Total
+              td USD #{flight.price}

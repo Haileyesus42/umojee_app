@@ -1,0 +1,157 @@
+{
+  "data": {
+    "type": "flight-order",
+    "flightOffers": [
+      {
+        "type": "flight-offer",
+        "id": "1",
+        "source": "GDS",
+        "instantTicketingRequired": false,
+        "nonHomogeneous": false,
+        "paymentCardRequired": false,
+        "lastTicketingDate": "2025-12-20",
+        "itineraries": [
+          {
+            "segments": [
+              {
+                "departure": {
+                  "iataCode": "ADD",
+                  "terminal": "2",
+                  "at": "2025-12-20T14:05:00"
+                },
+                "arrival": {
+                  "iataCode": "AUH",
+                  "terminal": "A",
+                  "at": "2025-12-20T19:25:00"
+                },
+                "carrierCode": "EY",
+                "number": "728",
+                "aircraft": { "code": "320" },
+                "operating": { "carrierCode": "EY" },
+                "duration": "PT4H20M",
+                "id": "3",
+                "numberOfStops": 0,
+                "co2Emissions": [
+                  { "weight": 160, "weightUnit": "KG", "cabin": "ECONOMY" }
+                ]
+              },
+              {
+                "departure": {
+                  "iataCode": "AUH",
+                  "terminal": "A",
+                  "at": "2025-12-20T20:45:00"
+                },
+                "arrival": {
+                  "iataCode": "DOH",
+                  "at": "2025-12-20T20:55:00"
+                },
+                "carrierCode": "EY",
+                "number": "669",
+                "aircraft": { "code": "320" },
+                "operating": { "carrierCode": "EY" },
+                "duration": "PT1H10M",
+                "id": "4",
+                "numberOfStops": 0,
+                "co2Emissions": [
+                  { "weight": 51, "weightUnit": "KG", "cabin": "ECONOMY" }
+                ]
+              }
+            ]
+          }
+        ],
+        "price": {
+          "currency": "USD",
+          "total": "229.75",
+          "base": "60.00",
+          "fees": [
+            { "amount": "0.00", "type": "SUPPLIER" },
+            { "amount": "0.00", "type": "TICKETING" },
+            { "amount": "0.00", "type": "FORM_OF_PAYMENT" }
+          ],
+          "grandTotal": "229.75",
+          "billingCurrency": "USD"
+        },
+        "pricingOptions": {
+          "fareType": ["PUBLISHED"],
+          "includedCheckedBagsOnly": true
+        },
+        "validatingAirlineCodes": ["EY"],
+        "travelerPricings": [
+          {
+            "travelerId": "1",
+            "fareOption": "STANDARD",
+            "travelerType": "ADULT",
+            "price": {
+              "currency": "USD",
+              "total": "229.75",
+              "base": "60.00",
+              "taxes": [
+                { "amount": "12.30", "code": "F6" },
+                { "amount": "2.00", "code": "L3" },
+                { "amount": "120.00", "code": "YQ" },
+                { "amount": "1.40", "code": "ZR" },
+                { "amount": "2.05", "code": "PZ" },
+                { "amount": "30.00", "code": "IH" },
+                { "amount": "2.00", "code": "S2" }
+              ],
+              "refundableTaxes": "49.75"
+            },
+            "fareDetailsBySegment": [
+              {
+                "segmentId": "3",
+                "cabin": "ECONOMY",
+                "fareBasis": "ENN00V4T",
+                "brandedFare": "YVALUE",
+                "class": "E",
+                "includedCheckedBags": { "weight": 40, "weightUnit": "KG" }
+              },
+              {
+                "segmentId": "4",
+                "cabin": "ECONOMY",
+                "fareBasis": "ENN00V4T",
+                "brandedFare": "YVALUE",
+                "class": "E",
+                "includedCheckedBags": { "weight": 40, "weightUnit": "KG" }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "travelers": [
+      {
+        "id": "1",
+        "dateOfBirth": "1998-01-16",
+        "name": {
+          "firstName": "NATNAEL",
+          "lastName": "GEBRETSADIK"
+        },
+        "gender": "MALE",
+        "contact": {
+          "emailAddress": "natnael@example.com",
+          "phones": [
+            {
+              "deviceType": "MOBILE",
+              "countryCallingCode": "251",
+              "number": "911234567"
+            }
+          ]
+        },
+        "documents": [
+          {
+            "documentType": "PASSPORT",
+            "birthPlace": "Addis Ababa",
+            "issuanceLocation": "Addis Ababa",
+            "issuanceDate": "2020-01-01",
+            "number": "A1234567",
+            "expiryDate": "2030-01-01",
+            "issuanceCountry": "ET",
+            "validityCountry": "ET",
+            "nationality": "ET",
+            "holder": true
+          }
+        ]
+      }
+    ]
+  }
+}

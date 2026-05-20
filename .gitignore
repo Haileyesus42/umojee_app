@@ -1,0 +1,49 @@
+# Env files — NEVER commit. Use .env.example. Production secrets via Infisical (planned).
+.env
+.env.local
+.env.*.local
+.env-prod
+.env.production
+.env.*.production
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node
+node_modules/
+.pnpm-store/
+*.log
+
+# Build outputs
+dist/
+build/
+
+# Data files that should not be in git
+*.db
+*.sqlite
+*.sqlite3
+.response_cache/
+
+# Coverage
+coverage/
+.coverage
+htmlcov/

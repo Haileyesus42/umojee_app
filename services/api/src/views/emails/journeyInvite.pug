@@ -1,0 +1,52 @@
+extends baseEmail
+
+block content
+  .journey-mail(style='background:#f4f8fb; border-radius:16px; overflow:hidden; border:1px solid #dbe7ef;')
+    .journey-mail__hero(style='background:linear-gradient(135deg, #062c30, #0f766e 58%, #f59e0b 140%); color:#ffffff; padding:28px 24px 24px;')
+      p(style='margin:0 0 10px; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; opacity:0.82;') Journey Circle
+      h1(style='margin:0; font-size:28px; line-height:1.15; font-weight:700;') Join the live journey
+      p(style='margin:12px 0 0; font-size:14px; line-height:1.7; max-width:460px; color:rgba(255,255,255,0.9);')
+        | #{inviterName} wants to connect with you on Umoja Airways and share a live journey experience together.
+
+    .journey-mail__body(style='background:#ffffff; padding:24px;')
+      p(style='margin:0 0 18px; color:#334155; font-size:15px; line-height:1.7;')
+        | Create your account, verify your email, and accept the friend request to unlock live journey sharing.
+
+      table(role='presentation', width='100%', cellpadding='0', cellspacing='0', style='margin:0 0 20px;')
+        tr
+          td(style='padding:0 0 12px;')
+            .info-card(style='background:linear-gradient(180deg, #f8fbfd, #eef6f7); border:1px solid #d7e9ea; border-radius:14px; padding:16px 18px;')
+              p(style='margin:0 0 6px; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#0f766e;') Invited By
+              p(style='margin:0; font-size:18px; font-weight:700; color:#0f172a;') #{inviterName}
+              p(style='margin:6px 0 0; font-size:13px; color:#64748b;') #{inviterEmail}
+
+      table(role='presentation', width='100%', cellpadding='0', cellspacing='0', style='margin:0 0 22px;')
+        tr
+          td(style='width:33.33%; padding-right:8px; vertical-align:top;')
+            .step(style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 12px; min-height:92px;')
+              p(style='margin:0 0 6px; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#0891b2;') Step 1
+              p(style='margin:0; font-size:13px; line-height:1.6; color:#334155;') Create your Umoja account
+          td(style='width:33.33%; padding:0 4px; vertical-align:top;')
+            .step(style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 12px; min-height:92px;')
+              p(style='margin:0 0 6px; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#0891b2;') Step 2
+              p(style='margin:0; font-size:13px; line-height:1.6; color:#334155;') Verify your email and open the app
+          td(style='width:33.33%; padding-left:8px; vertical-align:top;')
+            .step(style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 12px; min-height:92px;')
+              p(style='margin:0 0 6px; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#0891b2;') Step 3
+              p(style='margin:0; font-size:13px; line-height:1.6; color:#334155;') Accept the friend request to activate sharing
+
+      .cta-card(style='background:linear-gradient(180deg, #0f172a, #1e293b); border-radius:14px; padding:18px; color:#ffffff;')
+        p(style='margin:0 0 12px; font-size:14px; line-height:1.7; color:rgba(255,255,255,0.84);')
+          | Once your connection is accepted, the shared live journey will be delivered to your account automatically.
+        table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+          tbody
+            tr
+              td(align='left')
+                table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                  tbody
+                    tr
+                      td
+                        a(href=`${url}`, target='_blank' rel='noopener noreferrer') Create your account
+
+      p(style='margin:20px 0 0; color:#64748b; font-size:13px; line-height:1.7;')
+        | If you were not expecting this invitation, you can safely ignore this email.
