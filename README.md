@@ -1,4 +1,4 @@
-# Umoja Airways — Backend
+# Umoja Airways - Backend
 
 Monorepo containing every backend service that powers Umoja Airways. Two services today; more can be added under `services/`.
 
@@ -31,10 +31,10 @@ cp services/ai-concierge/.env.example services/ai-concierge/.env
 Then in two terminals:
 
 ```bash
-# Terminal 1 — main API
+# Terminal 1 - main API
 cd services/api && npm install && npm run dev
 
-# Terminal 2 — AI concierge
+# Terminal 2 - AI concierge
 cd services/ai-concierge && python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn server.main:app --reload --port 8000
