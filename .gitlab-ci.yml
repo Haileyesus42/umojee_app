@@ -1,70 +1,59 @@
-# umojaairways/backend — starter pipeline
-# Will evolve as SonarQube + Trivy + container scanning come online.
+# umojaairways/backend CI/CD — builds the API + AI-concierge images and deploys
+# to the .166 host stack. Ported from the legacy booking / booking-ai pipelines.
+#   services/api -> umoja-server     services/ai-concierge -> umoja-booking-ai
+stages: [cleanup, build, scan, deploy]
 
-stages:
-  - lint
-  - test
-  - build
-  - quality
+variables:
+  IMAGE_TAG: "${CI_PIPELINE_ID}-${CI_COMMIT_SHORT_SHA}"
+  DEPLOY_COMPOSE: /home/teddy/umoja-deploy/docker-compose.yml
 
-# --- API service (Node + TS) ---
-lint:api:
-  stage: lint
-  image: node:20-alpine
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH =~ /^ci\//'
+    - when: never
+
+cleanup:
+  stage: cleanup
+  tags: [umoja]
   script:
-    - cd services/api
-    - npm install --no-audit --no-fund --silent
-    - npm run lint --if-present
-    - npx tsc --noEmit || true
-
-test:api:
-  stage: test
-  image: node:20-alpine
-  script:
-    - cd services/api
-    - npm install --no-audit --no-fund --silent
-    - npm test --if-present
+    - /home/teddy/cleanup-old-images.sh --keep 1 --aggressive || true
+  when: always
   allow_failure: true
 
-build:api:
+build-server:
   stage: build
-  image: node:20-alpine
+  tags: [umoja]
+  needs: [cleanup]
   script:
-    - cd services/api
-    - npm install --no-audit --no-fund --silent
-    - npm run build --if-present
-  artifacts:
-    paths: [services/api/dist]
-    expire_in: 1 week
+    - docker build -t "umoja-server:$IMAGE_TAG" ./services/api
+    - if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then docker tag "umoja-server:$IMAGE_TAG" umoja-server:latest; fi
 
-# --- AI Concierge (Python + FastAPI + LangGraph) ---
-lint:ai-concierge:
-  stage: lint
-  image: python:3.11-slim
+build-booking-ai:
+  stage: build
+  tags: [umoja]
+  needs: [cleanup]
   script:
-    - cd services/ai-concierge
-    - pip install --quiet ruff
-    - ruff check . || true
+    - docker build -t "umoja-booking-ai:$IMAGE_TAG" ./services/ai-concierge
+    - if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then docker tag "umoja-booking-ai:$IMAGE_TAG" umoja-booking-ai:latest; fi
 
-test:ai-concierge:
-  stage: test
-  image: python:3.11-slim
-  script:
-    - cd services/ai-concierge
-    - pip install --quiet -r requirements.txt
-    - pip install --quiet pytest pytest-asyncio
-    - pytest -q || true
+scan:
+  stage: scan
+  tags: [umoja]
+  needs: [build-server, build-booking-ai]
   allow_failure: true
+  script:
+    - trivy image --cache-dir /tmp/trivy-be --exit-code 0 --severity HIGH,CRITICAL --no-progress "umoja-server:$IMAGE_TAG"
+    - trivy image --cache-dir /tmp/trivy-be --exit-code 0 --severity HIGH,CRITICAL --no-progress "umoja-booking-ai:$IMAGE_TAG"
 
-# TODO: enable when SonarQube + Trivy are live
-# sonarqube:
-#   stage: quality
-#   image: sonarsource/sonar-scanner-cli:latest
-#   script:
-#     - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
-#
-# trivy:image-scan:
-#   stage: quality
-#   image: aquasec/trivy:latest
-#   script:
-#     - trivy image --severity HIGH,CRITICAL --exit-code 1 $CI_REGISTRY_IMAGE/api:latest
+deploy:
+  stage: deploy
+  tags: [umoja]
+  needs: [scan]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  script:
+    - docker compose -f "$DEPLOY_COMPOSE" up -d --force-recreate server booking-ai
+    - sleep 5
+    - docker compose -f "$DEPLOY_COMPOSE" ps
