@@ -1,0 +1,42 @@
+extends baseEmail
+
+block content
+  .journey-mail(style='background:#f4f8fb; border-radius:16px; overflow:hidden; border:1px solid #dbe7ef;')
+    .journey-mail__hero(style='background:linear-gradient(135deg, #0f172a, #134e4a 52%, #10b981 120%); color:#ffffff; padding:28px 24px 24px;')
+      p(style='margin:0 0 10px; font-size:11px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; opacity:0.82;') Friendship Confirmed
+      h1(style='margin:0; font-size:28px; line-height:1.15; font-weight:700;') Your travel circle just grew
+      p(style='margin:12px 0 0; font-size:14px; line-height:1.7; max-width:470px; color:rgba(255,255,255,0.9);')
+        | You are now connected and ready to share live journeys, travel moments, and updates inside Umoja Airways.
+
+    .journey-mail__body(style='background:#ffffff; padding:24px;')
+      .info-card(style='background:linear-gradient(180deg, #f8fbfd, #eef6f7); border:1px solid #d7e9ea; border-radius:14px; padding:18px; margin:0 0 20px;')
+        p(style='margin:0 0 6px; font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#0f766e;') Connected Traveler
+        p(style='margin:0; font-size:20px; font-weight:700; color:#0f172a;') #{friendName}
+        p(style='margin:6px 0 0; font-size:13px; color:#64748b;') #{friendEmail}
+
+      table(role='presentation', width='100%', cellpadding='0', cellspacing='0', style='margin:0 0 22px;')
+        tr
+          td(style='width:50%; padding-right:8px; vertical-align:top;')
+            .step(style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; min-height:108px;')
+              p(style='margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#0891b2;') Next Move
+              p(style='margin:0; font-size:14px; line-height:1.7; color:#334155;') Share a live journey page directly from Journez.
+          td(style='width:50%; padding-left:8px; vertical-align:top;')
+            .step(style='background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; min-height:108px;')
+              p(style='margin:0 0 8px; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#0891b2;') Shared Experience
+              p(style='margin:0; font-size:14px; line-height:1.7; color:#334155;') Watch read-only live updates together from your own Umoja accounts.
+
+      .cta-card(style='background:linear-gradient(180deg, #0f172a, #1e293b); border-radius:14px; padding:18px; color:#ffffff;')
+        p(style='margin:0 0 12px; font-size:14px; line-height:1.7; color:rgba(255,255,255,0.84);')
+          | Open Journez and start sharing travel moments with your new connection.
+        table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+          tbody
+            tr
+              td(align='left')
+                table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                  tbody
+                    tr
+                      td
+                        a(href=`${url}`, target='_blank' rel='noopener noreferrer') Open Journez
+
+      p(style='margin:20px 0 0; color:#64748b; font-size:13px; line-height:1.7;')
+        | You can now search for each other from the share flow and send live journey links anytime.

@@ -1,0 +1,43 @@
+# Local development stack. Brings up the dependencies; you run the services from your terminal.
+# For prod, each service has its own Dockerfile and gets deployed independently.
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: umoja-mongo
+    ports: ["27017:27017"]
+    environment:
+      MONGO_INITDB_DATABASE: umoja
+    volumes: [mongo_data:/data/db]
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: umoja-redis
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+
+  pgvector:
+    image: ankane/pgvector:latest
+    container_name: umoja-pgvector
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: umoja_ai
+    volumes: [pgvector_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d umoja_ai"]
+      interval: 30s
+      timeout: 5s
+
+volumes:
+  mongo_data:
+  pgvector_data:

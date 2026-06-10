@@ -1,0 +1,32 @@
+{
+  "dependencies": [
+    "./agent",
+    "./agent/utils",
+    "./agent/amadeus",
+    "./agent/company_information",
+    "./server",
+    "langchain",
+    "langchain-core",
+    "langgraph",
+    "langchain-groq",
+    "langchain-community",
+    "fastapi",
+    "geopy",
+    "pillow",
+    "pinecone",
+    "pinecone-client",
+    "pymongo",
+    "python-dotenv",
+    "requests",
+    "rich",
+    "sqlalchemy",
+    "tavily-python",
+    "uvicorn",
+    "sentence-transformers",
+    "typing-extensions"
+  ],
+  "graphs": {
+    "agent": "./agent/router.py:graph"
+  },
+  "env": ".env"
+}

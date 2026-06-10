@@ -1,0 +1,70 @@
+# umojaairways/backend — starter pipeline
+# Will evolve as SonarQube + Trivy + container scanning come online.
+
+stages:
+  - lint
+  - test
+  - build
+  - quality
+
+# --- API service (Node + TS) ---
+lint:api:
+  stage: lint
+  image: node:20-alpine
+  script:
+    - cd services/api
+    - npm install --no-audit --no-fund --silent
+    - npm run lint --if-present
+    - npx tsc --noEmit || true
+
+test:api:
+  stage: test
+  image: node:20-alpine
+  script:
+    - cd services/api
+    - npm install --no-audit --no-fund --silent
+    - npm test --if-present
+  allow_failure: true
+
+build:api:
+  stage: build
+  image: node:20-alpine
+  script:
+    - cd services/api
+    - npm install --no-audit --no-fund --silent
+    - npm run build --if-present
+  artifacts:
+    paths: [services/api/dist]
+    expire_in: 1 week
+
+# --- AI Concierge (Python + FastAPI + LangGraph) ---
+lint:ai-concierge:
+  stage: lint
+  image: python:3.11-slim
+  script:
+    - cd services/ai-concierge
+    - pip install --quiet ruff
+    - ruff check . || true
+
+test:ai-concierge:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - cd services/ai-concierge
+    - pip install --quiet -r requirements.txt
+    - pip install --quiet pytest pytest-asyncio
+    - pytest -q || true
+  allow_failure: true
+
+# TODO: enable when SonarQube + Trivy are live
+# sonarqube:
+#   stage: quality
+#   image: sonarsource/sonar-scanner-cli:latest
+#   script:
+#     - sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
+#
+# trivy:image-scan:
+#   stage: quality
+#   image: aquasec/trivy:latest
+#   script:
+#     - trivy image --severity HIGH,CRITICAL --exit-code 1 $CI_REGISTRY_IMAGE/api:latest

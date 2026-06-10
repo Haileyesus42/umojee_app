@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Backend – API Demo</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; background: #f5f7fb; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 20px; font-size: 1.8em; }
+        
+        .endpoint-card { background: white; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .endpoint-header { background: #f0f0f0; padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; font-weight: bold; }
+        .endpoint-header:hover { background: #eaeaea; }
+        .method-tag { display: inline-block; background: #007bff; color: white; font-size: 0.7em; padding: 3px 6px; border-radius: 4px; margin-right: 8px; }
+        
+        .endpoint-content { display: none; padding: 15px; border-top: 1px solid #eee; min-height: 200px; }
+        .endpoint-content.expanded { display: block; max-height: 80vh; overflow-y: auto; }
+        
+        .detail-item { margin-bottom: 12px; }
+        .detail-label { font-weight: bold; color: #495057; margin-bottom: 4px; }
+        .request-body { width: 100%; font-family: monospace; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85em; resize: vertical; min-height: 60px; }
+        input[type="text"] { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #007bff; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; margin-top: 6px; }
+        button:disabled { background: #aaa; cursor: not-allowed; }
+        
+        .response-area { margin-top: 15px; background: #f8f9fa; border-radius: 4px; padding: 10px; }
+        .response-title { font-weight: bold; margin-bottom: 6px; }
+        .response-content { background: #212529; color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 0.8em; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+        
+        video, canvas, img { border-radius: 4px; border: 1px solid #ddd; max-width: 100%; }
+        .loading { display: inline-block; width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; border-top-color: transparent; animation: spin 0.6s linear infinite; margin-right: 4px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        #token-display { position: fixed; top: 5px; right: 5px; background: #28a745; color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8em; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .camera-buttons { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+        .inline-input { display: inline-block; width: 180px; margin-right: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Emergency Backend – API Demo</h1>
+        <div class="accordion" id="apiAccordion">
+
+            <!-- Health checks -->
+            <div class="endpoint-card"><div class="endpoint-header" onclick="toggleEndpoint(this)"><span><span class="method-tag">GET</span> Node.js Health</span><span>▼</span></div><div class="endpoint-content"><div class="endpoint-details"><div class="detail-label">URL: http://localhost:3000/api/health</div><button onclick="testGatewayEndpoint('http://localhost:3000/api/health', 'GET', null, this)">Check</button></div><div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div></div></div>
+            <div class="endpoint-card"><div class="endpoint-header" onclick="toggleEndpoint(this)"><span><span class="method-tag">GET</span> Python AI Health</span><span>▼</span></div><div class="endpoint-content"><div class="endpoint-details"><div class="detail-label">URL: http://localhost:8000/health-emergency</div><button onclick="testGatewayEndpoint('http://localhost:8000/health-emergency', 'GET', null, this)">Check</button></div><div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div></div></div>
+
+            <!-- NODE.JS AUTH & USER ENDPOINTS -->
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> User Signup</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/auth/signup</div>
+                        <textarea class="request-body" placeholder='{"firstName": "John", "lastName": "Doe", "email": "john.doe@example.com", "phone": "+1234567890", "dob": "1990-01-01", "password": "securePassword123"}'>{"firstName": "John", "lastName": "Doe", "email": "john.doe@example.com", "phone": "+1234567890", "dob": "1990-01-01", "password": "securePassword123"}</textarea>
+                        <button onclick="testGatewayEndpoint('http://localhost:3000/api/client/auth/signup', 'POST', this.previousElementSibling.value, this)">Signup</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> User Login</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/auth/login</div>
+                        <textarea class="request-body" placeholder='{"email": "user@example.com", "password": "password123"}'>{"email": "john.doe@example.com", "password": "securePassword123"}</textarea>
+                        <button onclick="testGatewayEndpoint('http://localhost:3000/api/client/auth/login', 'POST', this.previousElementSibling.value, this)">Login</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">GET</span> Get Current User</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/user/getMe</div>
+                        <button onclick="testGatewayProtected('http://localhost:3000/api/client/user/getMe', 'GET', null, this)">Get User</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Add Emergency Contact</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/emergency/contacts</div>
+                        <textarea class="request-body" placeholder='{"name": "Emergency Contact", "phone": "+1234567890", "relationship": "Friend", "priority": 1}'>{"name": "Emergency Contact", "phone": "+1234567890", "relationship": "Friend", "priority": 1}</textarea>
+                        <button onclick="testGatewayProtected('http://localhost:3000/api/client/emergency/contacts', 'POST', this.previousElementSibling.value, this)">Add Contact</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <!-- Update Emergency Contact -->
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">PUT</span> Update Emergency Contact</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/emergency/contacts/{contactId}</div>
+                        <div class="detail-item">
+                            <div class="detail-label">Contact ID:</div>
+                            <input type="text" id="update-contact-id" placeholder="e.g., 1 or contact_uuid" />
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Request Body (JSON):</div>
+                            <textarea id="update-contact-body" class="request-body" placeholder='{"name": "Updated Name", "phone": "+9876543210", "relationship": "Sibling", "priority": 2}'>{"name": "Updated Name", "phone": "+9876543210", "relationship": "Sibling", "priority": 2}</textarea>
+                        </div>
+                        <button onclick="updateEmergencyContact()">Update Contact</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">GET</span> Get Emergency Contacts</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/emergency/contacts</div>
+                        <button onclick="testGatewayProtected('http://localhost:3000/api/client/emergency/contacts', 'GET', null, this)">Get Contacts</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">PUT</span> Update User Profile</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/user/updateMe</div>
+                        <textarea class="request-body" placeholder='{"firstName": "Updated Name", "email": "updated@example.com", "phone": "+1987654321"}'>{"firstName": "Updated Demo User", "email": "updated_demo@example.com", "phone": "+1987654321"}</textarea>
+                        <button onclick="testGatewayProtected('http://localhost:3000/api/client/user/updateMe', 'PUT', this.previousElementSibling.value, this)">Update Profile</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Logout</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/auth/logout</div>
+                        <button onclick="logoutUser()">Logout</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <!-- BIOMETRIC – DIRECT PYTHON -->
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Face Enroll (Python)</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/face/enroll</div>
+                        <div class="detail-value">
+                            <video id="video" width="320" height="240" style="display:none;"></video>
+                            <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                            <div class="camera-buttons">
+                                <button id="start-camera-btn" onclick="startCamera()">Start Camera</button>
+                                <button id="capture-btn" onclick="captureImage()" disabled>Capture</button>
+                                <button id="stop-camera-btn" onclick="stopCamera()" disabled>Stop</button>
+                            </div>
+                            <div><img id="captured-image" src="" style="display:none; max-width:320px; margin-top:10px;"></div>
+                        </div>
+                        <textarea id="face-enroll-request-body" class="request-body" placeholder='{"name": "Your Name", "image_data": "base64..."}'>{"name": "Current User", "image_data": ""}</textarea>
+                        <button onclick="testPythonBiometric('http://localhost:8000/v1/face/enroll', 'POST', document.getElementById('face-enroll-request-body').value, this, true)">Enroll Face</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Face Verify (Python)</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/face/verify</div>
+                        <div class="detail-value">
+                            <video id="face-verify-video" width="320" height="240" style="display:none;"></video>
+                            <canvas id="face-verify-canvas" width="320" height="240" style="display:none;"></canvas>
+                            <div class="camera-buttons">
+                                <button id="face-verify-start-camera-btn" onclick="startFaceVerifyCamera()">Start Camera</button>
+                                <button id="face-verify-capture-btn" onclick="captureFaceVerifyImage()" disabled>Capture</button>
+                                <button id="face-verify-stop-camera-btn" onclick="stopFaceVerifyCamera()" disabled>Stop</button>
+                            </div>
+                            <div><img id="face-verify-captured-image" src="" style="display:none; max-width:320px; margin-top:10px;"></div>
+                        </div>
+                        <textarea id="face-verify-request-body" class="request-body" placeholder='{"image_data": "base64..."}'>{"image_data": ""}</textarea>
+                        <button onclick="testPythonBiometric('http://localhost:8000/v1/face/verify', 'POST', document.getElementById('face-verify-request-body').value, this, false)">Verify Face</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Palm Enroll (Python)</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/palm/enroll</div>
+                        <div class="detail-value">
+                            <video id="palm-video" width="320" height="240" style="display:none;"></video>
+                            <canvas id="palm-canvas" width="320" height="240" style="display:none;"></canvas>
+                            <div class="camera-buttons">
+                                <button id="palm-start-camera-btn" onclick="startPalmCamera()">Start Camera</button>
+                                <button id="palm-capture-btn" onclick="capturePalmImage()" disabled>Capture</button>
+                                <button id="palm-stop-camera-btn" onclick="stopPalmCamera()" disabled>Stop</button>
+                            </div>
+                            <div><img id="palm-captured-image" src="" style="display:none; max-width:320px; margin-top:10px;"></div>
+                        </div>
+                        <textarea id="palm-enroll-request-body" class="request-body" placeholder='{"image_data": "base64..."}'>{"image_data": ""}</textarea>
+                        <button onclick="testPythonBiometric('http://localhost:8000/v1/palm/enroll', 'POST', document.getElementById('palm-enroll-request-body').value, this, false)">Enroll Palm</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Palm Verify (Python)</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/palm/verify</div>
+                        <div class="detail-value">
+                            <video id="palm-verify-video" width="320" height="240" style="display:none;"></video>
+                            <canvas id="palm-verify-canvas" width="320" height="240" style="display:none;"></canvas>
+                            <div class="camera-buttons">
+                                <button id="palm-verify-start-camera-btn" onclick="startPalmVerifyCamera()">Start Camera</button>
+                                <button id="palm-verify-capture-btn" onclick="capturePalmVerifyImage()" disabled>Capture</button>
+                                <button id="palm-verify-stop-camera-btn" onclick="stopPalmVerifyCamera()" disabled>Stop</button>
+                            </div>
+                            <div><img id="palm-verify-captured-image" src="" style="display:none; max-width:320px; margin-top:10px;"></div>
+                        </div>
+                        <textarea id="palm-verify-request-body" class="request-body" placeholder='{"image_data": "base64..."}'>{"image_data": ""}</textarea>
+                        <button onclick="testPythonBiometric('http://localhost:8000/v1/palm/verify', 'POST', document.getElementById('palm-verify-request-body').value, this, false)">Verify Palm</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <!-- Additional Python endpoints -->
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Extract Face Embedding</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/face/extract-embedding</div>
+                        <input type="file" id="face-embedding-file" accept="image/*" />
+                        <button onclick="testPythonFileUpload('http://localhost:8000/v1/face/extract-embedding', 'POST', document.getElementById('face-embedding-file'), this)">Extract</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Face Liveness</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/face/liveness</div>
+                        <input type="file" id="face-liveness-file" accept="image/*" />
+                        <button onclick="testPythonFileUpload('http://localhost:8000/v1/face/liveness', 'POST', document.getElementById('face-liveness-file'), this)">Check Liveness</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Extract Palm Features</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/v1/palm/extract-features</div>
+                        <input type="file" id="palm-features-file" accept="image/*" />
+                        <button onclick="testPythonFileUpload('http://localhost:8000/v1/palm/extract-features', 'POST', document.getElementById('palm-features-file'), this)">Extract</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <!-- Face Login -->
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Face Login (public)</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:3000/api/client/auth/login</div>
+                        <div class="detail-value">
+                            <video id="face-login-video" width="320" height="240" style="display:none;"></video>
+                            <canvas id="face-login-canvas" width="320" height="240" style="display:none;"></canvas>
+                            <div class="camera-buttons">
+                                <button id="face-login-start-camera-btn" onclick="startFaceLoginCamera()">Start Camera</button>
+                                <button id="face-login-capture-btn" onclick="captureFaceLoginImage()" disabled>Capture</button>
+                                <button id="face-login-stop-camera-btn" onclick="stopFaceLoginCamera()" disabled>Stop</button>
+                            </div>
+                            <div><img id="face-login-captured-image" src="" style="display:none; max-width:320px; margin-top:10px;"></div>
+                        </div>
+                        <textarea id="face-login-request-body" class="request-body" placeholder='{"image_data": "base64..."}'>{"image_data": ""}</textarea>
+                        <button onclick="testGatewayEndpoint('http://localhost:3000/api/client/auth/login', 'POST', document.getElementById('face-login-request-body').value, this)">Login with Face</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+
+            <!-- Emergency Webhook -->
+            <div class="endpoint-card">
+                <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                    <span><span class="method-tag">POST</span> Emergency Webhook</span><span>▼</span>
+                </div>
+                <div class="endpoint-content">
+                    <div class="endpoint-details">
+                        <div class="detail-label">URL: http://localhost:8000/api/v1/emergency/webhook</div>
+                        <textarea class="request-body" placeholder='{"type": "sos"}'>{"type": "sos"}</textarea>
+                        <button onclick="testGatewayProtected('http://localhost:8000/api/v1/emergency/webhook', 'POST', this.previousElementSibling.value, this)">Send Emergency</button>
+                    </div>
+                    <div class="response-area"><div class="response-title">Response:</div><div class="response-content"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // UTILITIES
+        function toggleEndpoint(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('span:last-child');
+            content.classList.toggle('expanded');
+            icon.textContent = content.classList.contains('expanded') ? '▲' : '▼';
+        }
+
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) { return null; }
+        }
+
+        function getUserIdFromToken() {
+            const token = localStorage.getItem('jwt_token');
+            if (!token) return null;
+            const payload = parseJwt(token);
+            if (!payload) return null;
+            let uid = payload.id || payload.userId || payload.sub || payload.user_id;
+            if (uid !== undefined && uid !== null) return String(uid);
+            return payload.email || null;
+        }
+
+        function updateTokenDisplay() {
+            let existing = document.getElementById('token-display');
+            if (existing) existing.remove();
+            const token = localStorage.getItem('jwt_token');
+            if (token) {
+                const payload = parseJwt(token);
+                const userName = payload?.firstName || payload?.name || payload?.email || payload?.sub || 'User';
+                const div = document.createElement('div');
+                div.id = 'token-display';
+                div.textContent = `Logged in as: ${userName}`;
+                document.body.appendChild(div);
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('jwt_token');
+            updateTokenDisplay();
+            alert('Logged out. Token cleared.');
+        }
+
+        // GATEWAY ENDPOINTS (JSON)
+        async function testGatewayEndpoint(url, method, body, button) {
+            const responseArea = button.parentElement.nextElementSibling;
+            const responseContent = responseArea.querySelector('.response-content');
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Loading...';
+            button.disabled = true;
+            try {
+                const options = { method, headers: { 'Content-Type': 'application/json' } };
+                if (body && method !== 'GET') options.body = typeof body === 'string' ? body : JSON.stringify(body);
+                const response = await fetch(url, options);
+                const text = await response.text();
+                let parsed;
+                try { parsed = JSON.parse(text); } catch { parsed = text; }
+                if (url.includes('/login') || url.includes('/signup')) {
+                    let token = parsed?.access_token || parsed?.token || parsed?.accessToken ||
+                               (parsed?.data?.token) || (parsed?.data?.access_token);
+                    if (token) {
+                        localStorage.setItem('jwt_token', token);
+                        responseContent.textContent = JSON.stringify(parsed, null, 2) + '\n\n✅ Token saved!';
+                        updateTokenDisplay();
+                    } else {
+                        responseContent.textContent = typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : text;
+                    }
+                } else {
+                    responseContent.textContent = typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : text;
+                }
+                responseArea.classList.add('show');
+            } catch (err) {
+                responseContent.textContent = `Error: ${err.message}`;
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        async function testGatewayProtected(url, method, body, button) {
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Loading...';
+            button.disabled = true;
+            let token = localStorage.getItem('jwt_token');
+            if (!token) {
+                token = prompt('Enter JWT token (login first):');
+                if (!token) { button.textContent = originalText; button.disabled = false; return; }
+                localStorage.setItem('jwt_token', token);
+            }
+            const responseArea = button.parentElement.nextElementSibling;
+            const responseContent = responseArea.querySelector('.response-content');
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                };
+                if (body && method !== 'GET') options.body = typeof body === 'string' ? body : JSON.stringify(body);
+                const response = await fetch(url, options);
+                const responseData = await response.text();
+                let parsed;
+                try { parsed = JSON.parse(responseData); } catch { parsed = responseData; }
+                responseContent.textContent = typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : responseData;
+                if (response.status === 401) {
+                    localStorage.removeItem('jwt_token');
+                    alert('Token expired/invalid. Please login again.');
+                    updateTokenDisplay();
+                }
+                responseArea.classList.add('show');
+            } catch (err) {
+                responseContent.textContent = `Error: ${err.message}`;
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Update emergency contact handler
+        async function updateEmergencyContact() {
+            const contactId = document.getElementById('update-contact-id').value.trim();
+            if (!contactId) {
+                alert('Please enter a Contact ID');
+                return;
+            }
+            const bodyJson = document.getElementById('update-contact-body').value;
+            let bodyObj;
+            try {
+                bodyObj = JSON.parse(bodyJson);
+            } catch(e) {
+                alert('Invalid JSON body');
+                return;
+            }
+            const url = `http://localhost:3000/api/client/emergency/contacts/${contactId}`;
+            const button = event.target;
+            const card = button.closest('.endpoint-card');
+            const responseArea = card.querySelector('.response-area');
+            const responseContent = responseArea.querySelector('.response-content');
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Updating...';
+            button.disabled = true;
+            let token = localStorage.getItem('jwt_token');
+            if (!token) {
+                token = prompt('Enter JWT token (login first):');
+                if (!token) { button.textContent = originalText; button.disabled = false; return; }
+                localStorage.setItem('jwt_token', token);
+            }
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(bodyObj)
+                });
+                const data = await response.text();
+                let parsed;
+                try { parsed = JSON.parse(data); } catch { parsed = data; }
+                responseContent.textContent = typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : data;
+                if (response.status === 401) {
+                    localStorage.removeItem('jwt_token');
+                    alert('Token expired/invalid. Please login again.');
+                    updateTokenDisplay();
+                }
+                responseArea.classList.add('show');
+            } catch (err) {
+                responseContent.textContent = `Error: ${err.message}`;
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // DIRECT PYTHON BIOMETRIC (multipart)
+        async function testPythonBiometric(url, method, body, button, includeName = false) {
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Loading...';
+            button.disabled = true;
+            const responseArea = button.parentElement.nextElementSibling;
+            const responseContent = responseArea.querySelector('.response-content');
+            try {
+                let data = {};
+                try { data = JSON.parse(body); } catch(e) { data = {}; }
+                const formData = new FormData();
+                if (data.image_data) {
+                    const byteChars = atob(data.image_data);
+                    const byteArrays = [];
+                    for (let offset = 0; offset < byteChars.length; offset += 512) {
+                        const slice = byteChars.slice(offset, offset + 512);
+                        const byteNumbers = new Array(slice.length);
+                        for (let i = 0; i < slice.length; i++) byteNumbers[i] = slice.charCodeAt(i);
+                        byteArrays.push(new Uint8Array(byteNumbers));
+                    }
+                    const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+                    formData.append('image_data', blob, 'image.jpg');
+                }
+                const userId = getUserIdFromToken();
+                if (userId) {
+                    formData.append('user_id', userId);
+                } else {
+                    const manualId = prompt('No JWT token found. Enter user_id:');
+                    if (manualId) formData.append('user_id', manualId);
+                }
+                if (includeName && data.name) formData.append('name', data.name);
+                const response = await fetch(url, { method, body: formData });
+                const responseData = await response.text();
+                let parsed;
+                try { parsed = JSON.parse(responseData); } catch { parsed = responseData; }
+                responseContent.textContent = typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : responseData;
+                responseArea.classList.add('show');
+            } catch (err) {
+                responseContent.textContent = `Error: ${err.message}`;
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        async function testPythonFileUpload(url, method, fileInput, button) {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select a file first.');
+                return;
+            }
+            const originalText = button.textContent;
+            button.innerHTML = '<span class="loading"></span> Loading...';
+            button.disabled = true;
+            const responseArea = button.parentElement.nextElementSibling;
+            const responseContent = responseArea.querySelector('.response-content');
+            try {
+                const formData = new FormData();
+                formData.append('image_data', fileInput.files[0]);
+                const response = await fetch(url, { method, body: formData });
+                const responseData = await response.text();
+                let parsed;
+                try { parsed = JSON.parse(responseData); } catch { parsed = responseData; }
+                responseContent.textContent = typeof parsed === 'object' ? JSON.stringify(parsed, null, 2) : responseData;
+                responseArea.classList.add('show');
+            } catch (err) {
+                responseContent.textContent = `Error: ${err.message}`;
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // CAMERA FUNCTIONS
+        let videoStream = null;
+        function startCamera() {
+            const video = document.getElementById('video');
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => { videoStream = stream; video.srcObject = stream; video.style.display = 'block'; document.getElementById('start-camera-btn').disabled = true; document.getElementById('capture-btn').disabled = false; document.getElementById('stop-camera-btn').disabled = false; video.play(); })
+                .catch(err => alert('Camera error: ' + err.message));
+        }
+        function captureImage() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = video.videoWidth || 320;
+            canvas.height = video.videoHeight || 240;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            const base64 = dataUrl.split(',')[1];
+            document.getElementById('face-enroll-request-body').value = JSON.stringify({ name: "Current User", image_data: base64 }, null, 2);
+            document.getElementById('captured-image').src = dataUrl;
+            document.getElementById('captured-image').style.display = 'block';
+            stopCamera();
+        }
+        function stopCamera() { if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; } document.getElementById('video').style.display = 'none'; document.getElementById('start-camera-btn').disabled = false; document.getElementById('capture-btn').disabled = true; document.getElementById('stop-camera-btn').disabled = true; }
+
+        let palmStream = null;
+        function startPalmCamera() { const video = document.getElementById('palm-video'); navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { palmStream = stream; video.srcObject = stream; video.style.display = 'block'; document.getElementById('palm-start-camera-btn').disabled = true; document.getElementById('palm-capture-btn').disabled = false; document.getElementById('palm-stop-camera-btn').disabled = false; video.play(); }).catch(err => alert(err.message)); }
+        function capturePalmImage() { const video = document.getElementById('palm-video'); const canvas = document.getElementById('palm-canvas'); const ctx = canvas.getContext('2d'); canvas.width = video.videoWidth || 320; canvas.height = video.videoHeight || 240; ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL('image/jpeg'); const base64 = dataUrl.split(',')[1]; document.getElementById('palm-enroll-request-body').value = JSON.stringify({ image_data: base64 }, null, 2); document.getElementById('palm-captured-image').src = dataUrl; document.getElementById('palm-captured-image').style.display = 'block'; stopPalmCamera(); }
+        function stopPalmCamera() { if (palmStream) { palmStream.getTracks().forEach(t => t.stop()); palmStream = null; } document.getElementById('palm-video').style.display = 'none'; document.getElementById('palm-start-camera-btn').disabled = false; document.getElementById('palm-capture-btn').disabled = true; document.getElementById('palm-stop-camera-btn').disabled = true; }
+
+        let faceVerifyStream = null;
+        function startFaceVerifyCamera() { const video = document.getElementById('face-verify-video'); navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { faceVerifyStream = stream; video.srcObject = stream; video.style.display = 'block'; document.getElementById('face-verify-start-camera-btn').disabled = true; document.getElementById('face-verify-capture-btn').disabled = false; document.getElementById('face-verify-stop-camera-btn').disabled = false; video.play(); }).catch(err => alert(err.message)); }
+        function captureFaceVerifyImage() { const video = document.getElementById('face-verify-video'); const canvas = document.getElementById('face-verify-canvas'); const ctx = canvas.getContext('2d'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL('image/jpeg'); const base64 = dataUrl.split(',')[1]; document.getElementById('face-verify-request-body').value = JSON.stringify({ image_data: base64 }, null, 2); document.getElementById('face-verify-captured-image').src = dataUrl; document.getElementById('face-verify-captured-image').style.display = 'block'; stopFaceVerifyCamera(); }
+        function stopFaceVerifyCamera() { if (faceVerifyStream) { faceVerifyStream.getTracks().forEach(t => t.stop()); faceVerifyStream = null; } document.getElementById('face-verify-video').style.display = 'none'; document.getElementById('face-verify-start-camera-btn').disabled = false; document.getElementById('face-verify-capture-btn').disabled = true; document.getElementById('face-verify-stop-camera-btn').disabled = true; }
+
+        let palmVerifyStream = null;
+        function startPalmVerifyCamera() { const video = document.getElementById('palm-verify-video'); navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { palmVerifyStream = stream; video.srcObject = stream; video.style.display = 'block'; document.getElementById('palm-verify-start-camera-btn').disabled = true; document.getElementById('palm-verify-capture-btn').disabled = false; document.getElementById('palm-verify-stop-camera-btn').disabled = false; video.play(); }).catch(err => alert(err.message)); }
+        function capturePalmVerifyImage() { const video = document.getElementById('palm-verify-video'); const canvas = document.getElementById('palm-verify-canvas'); const ctx = canvas.getContext('2d'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL('image/jpeg'); const base64 = dataUrl.split(',')[1]; document.getElementById('palm-verify-request-body').value = JSON.stringify({ image_data: base64 }, null, 2); document.getElementById('palm-verify-captured-image').src = dataUrl; document.getElementById('palm-verify-captured-image').style.display = 'block'; stopPalmVerifyCamera(); }
+        function stopPalmVerifyCamera() { if (palmVerifyStream) { palmVerifyStream.getTracks().forEach(t => t.stop()); palmVerifyStream = null; } document.getElementById('palm-verify-video').style.display = 'none'; document.getElementById('palm-verify-start-camera-btn').disabled = false; document.getElementById('palm-verify-capture-btn').disabled = true; document.getElementById('palm-verify-stop-camera-btn').disabled = true; }
+
+        let faceLoginStream = null;
+        function startFaceLoginCamera() { const video = document.getElementById('face-login-video'); navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { faceLoginStream = stream; video.srcObject = stream; video.style.display = 'block'; document.getElementById('face-login-start-camera-btn').disabled = true; document.getElementById('face-login-capture-btn').disabled = false; document.getElementById('face-login-stop-camera-btn').disabled = false; video.play(); }).catch(err => alert(err.message)); }
+        function captureFaceLoginImage() { const video = document.getElementById('face-login-video'); const canvas = document.getElementById('face-login-canvas'); const ctx = canvas.getContext('2d'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; ctx.drawImage(video, 0, 0); const dataUrl = canvas.toDataURL('image/jpeg'); const base64 = dataUrl.split(',')[1]; document.getElementById('face-login-request-body').value = JSON.stringify({ image_data: base64 }, null, 2); document.getElementById('face-login-captured-image').src = dataUrl; document.getElementById('face-login-captured-image').style.display = 'block'; stopFaceLoginCamera(); }
+        function stopFaceLoginCamera() { if (faceLoginStream) { faceLoginStream.getTracks().forEach(t => t.stop()); faceLoginStream = null; } document.getElementById('face-login-video').style.display = 'none'; document.getElementById('face-login-start-camera-btn').disabled = false; document.getElementById('face-login-capture-btn').disabled = true; document.getElementById('face-login-stop-camera-btn').disabled = true; }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.endpoint-content').forEach(el => el.classList.remove('expanded'));
+            document.querySelectorAll('.endpoint-header span:last-child').forEach(icon => icon.textContent = '▼');
+            updateTokenDisplay();
+        });
+    </script>
+</body>
+</html>

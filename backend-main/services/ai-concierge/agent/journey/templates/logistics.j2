@@ -1,0 +1,6 @@
+**Flight**: {{ airline or '' }} {{ flight_number or 'Information' }} ({{ origin or 'Origin' }} -> {{ destination or 'Airport' }})
+**Flight departure**: {{ flight_departure_time or 'TBD' }}
+**Recommended departure**: {{ recommended_time or 'TBD' }}
+**Traffic**: {{ traffic_conditions or 'unknown' }}{% if traffic_delay is not none %} (+{{ traffic_delay }} min){% endif %}{% if travel_duration_minutes %}, {{ travel_duration_minutes }} min current travel time{% endif %}{% if distance_km %}, {{ distance_km }} km{% endif %}
+
+{% if pro_tip %}{{ pro_tip }}{% endif %}

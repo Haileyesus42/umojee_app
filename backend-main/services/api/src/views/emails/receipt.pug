@@ -1,0 +1,138 @@
+doctype html
+html
+  head
+    title Electronic Ticket for Your Umoja Airways Payment
+    style.
+      body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .logo-container {
+            border-bottom: solid 2px black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 50px;
+            margin-bottom: 10px;
+        }
+
+        .details-table,
+        .details-table th,
+        .details-table td {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+
+        .details-table th,
+        .details-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .details {
+            margin-top: 10px;
+            border: solid 1px black;
+            padding: 10px;
+        }
+
+        .details-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+  body
+    .details-container
+      div
+        .section-title Passenger Information
+        .details
+          p
+            strong Ticket Number:
+            | #{flight.flightId} 
+          p
+            strong Passenger Name:
+            ul
+            each passenger in passengers
+              li #{passenger.title} #{passenger.firstName} #{passenger.lastName}
+            p
+            strong Name Ref:
+            | ADT
+          p
+            strong Issue Date:
+            | #{currentDateTime}
+          p
+            strong Issuing Airline:
+            | Umoja Airways
+          p
+            strong Issuing Agent:
+            | Umoja Airways/ABC11
+          p
+            strong Issuing Agent Location:
+            | FINCHA, ETHIOPIA
+      div
+        .section-title Booking Reference
+        .details
+          p GDLIMD
+    .section-title Itinerary Details
+    table.details-table
+      tr
+        th Flight
+        th Depart
+        th Arrive
+        th Cabin/Seat
+        th Baggage
+        th Flight Info
+      tr
+        td
+          | #{flight.flightNumber}
+          br
+          | Ok to fly
+        td
+          | #{flight.departureAirport}(#{flight.departureAirportAcronym})
+          br
+          | #{departureDate}
+        td
+          | #{flight.arrivalAirport}(#{flight.arrivalAirportAcronym})
+          br
+          | #{flight.terminal}
+          br
+          | #{arrivalTime}
+        td Economy / M
+        td
+          | Check-in Required
+        td
+          | Not Valid Before: #{departureDate}
+          br
+          | Not Valid After: #{arrivalTime}
+    .section-title Receipt And Payment Details
+    table.details-table
+      tr
+        th Fare
+        td USD #{totalprice}
+      tr
+        th Taxes/Fees/Carrier-Imposed Charges
+        td
+          ul
+            li USD 0.00 (Service Fee - Carrier-Imposed Fuel)
+            li USD 0.00 (Stamp Tax)
+            li USD 0.00 (Airport Departure Tax)
+      tr
+        th Fare Calculation Line
+        td #{flight.arrivalAirportAcronym}
+      tr
+        th Form of Payment
+        td Stripe
+      tr
+        th Total
+        td USD #{totalprice}

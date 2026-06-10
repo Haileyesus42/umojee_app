@@ -1,0 +1,10 @@
+🗓️ **Travel Date**: {{ travel_date or 'TBD' }}
+✈️ **Flight**: {{ airline or '' }} {{ flight_number or 'Information' }} ({{ origin or 'Origin' }} → {{ destination_airport or 'Airport' }})
+
+---
+
+🚦 **Traffic Alert**: Heavy traffic detected on your route to {{ destination_name or 'the airport' }}.
+Estimated delay: +{{ delay_minutes }} minutes.
+{% if actions %}
+**Pro-tip**: {{ actions[0] }}
+{% endif %}

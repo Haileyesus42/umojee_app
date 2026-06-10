@@ -1,0 +1,182 @@
+{
+  "ET": {
+    "iata": "ET",
+    "name": "Ethiopian Airlines",
+    "commons_category_title": "Aircraft of Ethiopian Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Ethiopian_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Ethiopian%20Airlines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "SV": {
+    "iata": "SV",
+    "name": "Saudia",
+    "commons_category_title": "Aircraft of Saudi Arabian Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Saudi_Arabian_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Saudia%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "EK": {
+    "iata": "EK",
+    "name": "Emirates",
+    "commons_category_title": "Emirates (airline)",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Emirates_(airline)",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Emirates%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "QR": {
+    "iata": "QR",
+    "name": "Qatar Airways",
+    "commons_category_title": "Aircraft of Qatar Airways",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Qatar_Airways",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Qatar%20Airways%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "TK": {
+    "iata": "TK",
+    "name": "Turkish Airlines",
+    "commons_category_title": "Aircraft of Turkish Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Turkish_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Turkish%20Airlines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "BA": {
+    "iata": "BA",
+    "name": "British Airways",
+    "commons_category_title": "Aircraft of British Airways",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:British_Airways",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=British%20Airways%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "LH": {
+    "iata": "LH",
+    "name": "Lufthansa",
+    "commons_category_title": "Aircraft of Lufthansa",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Lufthansa",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Lufthansa%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "AF": {
+    "iata": "AF",
+    "name": "Air France",
+    "commons_category_title": "Aircraft of Air France",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Air_France",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Air%20France%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "KL": {
+    "iata": "KL",
+    "name": "KLM",
+    "commons_category_title": "Aircraft of KLM",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:KLM",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=KLM%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "AA": {
+    "iata": "AA",
+    "name": "American Airlines",
+    "commons_category_title": "Aircraft of American Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:American_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=American%20Airlines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "UA": {
+    "iata": "UA",
+    "name": "United Airlines",
+    "commons_category_title": "Aircraft of United Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:United_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=United%20Airlines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "DL": {
+    "iata": "DL",
+    "name": "Delta Air Lines",
+    "commons_category_title": "Aircraft of Delta Air Lines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Delta_Air_Lines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Delta%20Air%20Lines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "W6": {
+    "iata": "W6",
+    "name": "Wizz Air",
+    "commons_category_title": "Aircraft of Wizz Air",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Wizz_Air",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Wizz%20Air%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "FR": {
+    "iata": "FR",
+    "name": "Ryanair",
+    "commons_category_title": "Aircraft of Ryanair",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Ryanair",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Ryanair%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "U2": {
+    "iata": "U2",
+    "name": "easyJet",
+    "commons_category_title": "Aircraft of easyJet",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:EasyJet",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=easyJet%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "QF": {
+    "iata": "QF",
+    "name": "Qantas",
+    "commons_category_title": "Aircraft of Qantas",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Qantas",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Qantas%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "SQ": {
+    "iata": "SQ",
+    "name": "Singapore Airlines",
+    "commons_category_title": "Aircraft of Singapore Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Singapore_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Singapore%20Airlines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "CX": {
+    "iata": "CX",
+    "name": "Cathay Pacific",
+    "commons_category_title": "Aircraft of Cathay Pacific",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Cathay_Pacific_Airways",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Cathay%20Pacific%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "NH": {
+    "iata": "NH",
+    "name": "All Nippon Airways (ANA)",
+    "commons_category_title": "Aircraft of All Nippon Airways",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:All_Nippon_Airways",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=All%20Nippon%20Airways%20%28ANA%29%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  },
+  "JL": {
+    "iata": "JL",
+    "name": "Japan Airlines",
+    "commons_category_title": "Aircraft of Japan Airlines",
+    "commons_category_url": "https://commons.wikimedia.org/wiki/Category:Japan_Airlines",
+    "commons_search_url": "https://commons.wikimedia.org/w/index.php?search=Japan%20Airlines%20aircraft&title=Special%3ASearch&ns6=1&advancedSearch-current=%7B%7D&fulltext=1",
+    "plane_photo_url": null,
+    "license": "Varies per image on Commons (usually CC BY/CC BY-SA). Check each file page."
+  }
+}
