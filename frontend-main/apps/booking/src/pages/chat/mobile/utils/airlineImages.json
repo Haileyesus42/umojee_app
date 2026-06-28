@@ -1,0 +1,279 @@
+{
+  "ET": {
+    "iata": "ET",
+    "icao": "ETH",
+    "name": "Ethiopian Airlines",
+    "country": "ET",
+    "brand_colors": [
+      "#078930",
+      "#DA121A",
+      "#FCDC04"
+    ],
+    "airline_image": "https://res.cloudinary.com/dxeuetfjo/image/upload/v1750501950/news__bVYQbr_1750501950.webp"
+  },
+  "SV": {
+    "iata": "SV",
+    "icao": "SVA",
+    "name": "Saudia",
+    "country": "SA",
+    "brand_colors": [
+      "#006C35",
+      "#B38E5D"
+    ],
+    "airline_image": "https://economysaudiarabia.com/wp-content/uploads/sites/2/2024/09/Saudia-Medan.jpg"
+  },
+  "EK": {
+    "iata": "EK",
+    "icao": "UAE",
+    "name": "Emirates",
+    "country": "AE",
+    "brand_colors": [
+      "#D71920",
+      "#C5B358"
+    ],
+    "airline_image": "https://photos.maldivesholidayoffers.com/blog/9788f0bcabf4e29f12f71123b3e273d0-org.jpg"
+  },
+  "QR": {
+    "iata": "QR",
+    "icao": "QTR",
+    "name": "Qatar Airways",
+    "country": "QA",
+    "brand_colors": [
+      "#5C0E2F",
+      "#9F9F9F"
+    ],
+    "airline_image": "https://samchui.com/wp-content/uploads/2025/05/Qatar-Airways-Boeing.jpg"
+  },
+  "TK": {
+    "iata": "TK",
+    "icao": "THY",
+    "name": "Turkish Airlines",
+    "country": "TR",
+    "brand_colors": [
+      "#E30A17",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://static0.simpleflyingimages.com/wordpress/wp-content/uploads/2025/09/shutterstock_2323505881.jpg"
+  },
+  "EY": {
+    "iata": "EY",
+    "icao": "ETD",
+    "name": "Etihad Airways",
+    "country": "AE",
+    "brand_colors": [
+      "#BD8B13",
+      "#4B2E83"
+    ],
+    "airline_image": "https://www.etihad.com/content/dam/eag/etihadairways/etihadcom/2025/global/products/our-fleet/A380.png?imwidth=480&imdensity=2.625"
+  },
+  "LH": {
+    "iata": "LH",
+    "icao": "DLH",
+    "name": "Lufthansa",
+    "country": "DE",
+    "brand_colors": [
+      "#05164D",
+      "#FFCC00"
+    ],
+    "airline_image": "https://www.airport-technology.com/wp-content/uploads/sites/14/2023/10/CITY-AIRLINES.jpg"
+  },
+  "BA": {
+    "iata": "BA",
+    "icao": "BAW",
+    "name": "British Airways",
+    "country": "GB",
+    "brand_colors": [
+      "#075AAA",
+      "#BA0C2F"
+    ],
+    "airline_image": "https://e3.365dm.com/22/07/1600x900/skynews-british-airway-airways_5826281.jpg?20220707063842"
+  },
+  "AF": {
+    "iata": "AF",
+    "icao": "AFR",
+    "name": "Air France",
+    "country": "FR",
+    "brand_colors": [
+      "#002157",
+      "#E11C2A"
+    ],
+    "airline_image": "https://cdn.britannica.com/62/146262-050-53561981/Air-France-Boeing-777-300ER.jpg"
+  },
+  "KL": {
+    "iata": "KL",
+    "icao": "KLM",
+    "name": "KLM Royal Dutch Airlines",
+    "country": "NL",
+    "brand_colors": [
+      "#00A1DE",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://www.klia2.info/wp-content/uploads/klm-roya-dutch-airlines-01.webp"
+  },
+  "AA": {
+    "iata": "AA",
+    "icao": "AAL",
+    "name": "American Airlines",
+    "country": "US",
+    "brand_colors": [
+      "#B7312C",
+      "#005DAA"
+    ],
+    "airline_image": "https://s202.q4cdn.com/986123435/files/images/thumbs/240103-Newsroom-Holiday-travel.jpg"
+  },
+  "DL": {
+    "iata": "DL",
+    "icao": "DAL",
+    "name": "Delta Air Lines",
+    "country": "US",
+    "brand_colors": [
+      "#C8102E",
+      "#003A8F"
+    ],
+    "airline_image": "https://a.storyblok.com/f/271050/980x600/6b9e2aece2/skyteam-delta-air-lines-airplane-980x600.jpg/m/"
+  },
+  "UA": {
+    "iata": "UA",
+    "icao": "UAL",
+    "name": "United Airlines",
+    "country": "US",
+    "brand_colors": [
+      "#002244",
+      "#005DAA"
+    ],
+    "airline_image": "https://www.wcia.com/wp-content/uploads/sites/44/2024/04/661ef5ec731727.89602926.jpeg?w=2560&h=1440&crop=1"
+  },
+  "SQ": {
+    "iata": "SQ",
+    "icao": "SIA",
+    "name": "Singapore Airlines",
+    "country": "SG",
+    "brand_colors": [
+      "#00266B",
+      "#CBA052"
+    ],
+    "airline_image": "https://static0.simpleflyingimages.com/wordpress/wp-content/uploads/2026/02/singapore-airlines-airbus-a350-900-taxiing.jpg?w=1200&h=628&fit=crop"
+  },
+  "CX": {
+    "iata": "CX",
+    "icao": "CPA",
+    "name": "Cathay Pacific",
+    "country": "HK",
+    "brand_colors": [
+      "#006564",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://media.20min.ch/7/image/2024/09/03/52726196-4eb1-43af-ba9e-53aa5b582575.jpeg?auto=format%2Ccompress%2Cenhance&fit=max&w=1200&h=1200&rect=0%2C0%2C2048%2C1267&fp-x=0.5&fp-y=0.500394632991318&s=5d0158d73b1d2cfad4b6bb68e25cc5e3"
+  },
+  "NH": {
+    "iata": "NH",
+    "icao": "ANA",
+    "name": "All Nippon Airways",
+    "country": "JP",
+    "brand_colors": [
+      "#0033A0",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://cdn.airlineratings.com/uploads/photo-1617361050340-5789f4ce6e4c"
+  },
+  "JL": {
+    "iata": "JL",
+    "icao": "JAL",
+    "name": "Japan Airlines",
+    "country": "JP",
+    "brand_colors": [
+      "#C8102E",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://freightwaves.b-cdn.net/wp-content/uploads/2023/05/09/Japan-Airlines-767s_1.jpg?width=1920&height=1080"
+  },
+  "KU": {
+    "iata": "KU",
+    "icao": "KAC",
+    "name": "Kuwait Airways",
+    "country": "KW",
+    "brand_colors": [
+      "#003DA5",
+      "#00A651"
+    ],
+    "airline_image": "https://airplane-pictures.net/images/uploaded-images/2017/11/12/987838.jpg"
+  },
+  "KQ": {
+    "iata": "KQ",
+    "icao": "KQA",
+    "name": "Kenya Airways",
+    "country": "KE",
+    "brand_colors": [
+      "#BB0000",
+      "#007A33"
+    ],
+    "airline_image": "https://s28477.pcdn.co/wp-content/uploads/2017/10/Kenya_1-984x554.jpg"
+  },
+  "MS": {
+    "iata": "MS",
+    "icao": "MSR",
+    "name": "EgyptAir",
+    "country": "EG",
+    "brand_colors": [
+      "#003A8F",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://img.flugrevue.de/_/bg:FFFFFF/f:best/rt:fill/w:2200/plain/2249591.jpg"
+  },
+  "QF": {
+    "iata": "QF",
+    "icao": "QFA",
+    "name": "Qantas",
+    "country": "AU",
+    "brand_colors": [
+      "#E4002B",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://res.cloudinary.com/momentum-media-group-pty-ltd/images/f_auto/v1670219922/Australian%20Aviation/An_earlier_image_showing_787-9_VH-ZNK_in_Dallas_Qantas_i0bczf/An_earlier_image_showing_787-9_VH-ZNK_in_Dallas_Qantas_i0bczf.jpg"
+  },
+  "AC": {
+    "iata": "AC",
+    "icao": "ACA",
+    "name": "Air Canada",
+    "country": "CA",
+    "brand_colors": [
+      "#D80621",
+      "#000000"
+    ],
+    "airline_image": "https://freightwaves.b-cdn.net/wp-content/uploads/2023/09/25/Air-Canada-Cargo-767F_1.jpg?width=1920&height=1080"
+  },
+  "XY": {
+    "iata": "XY",
+    "icao": "KNE",
+    "name": "flynas",
+    "country": "SA",
+    "brand_colors": [
+      "#6B2D8B",
+      "#FFD700"
+    ],
+    "airline_image": "https://www.arabianbusiness.com/wp-content/uploads/sites/3/cloud/2022/07/04/Flynas.jpg"
+  },
+  "FZ": {
+    "iata": "FZ",
+    "icao": "FDB",
+    "name": "flydubai",
+    "country": "AE",
+    "brand_colors": [
+      "#F26522",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://cdn.uc.assets.prezly.com/d13cc28c-22b2-48d6-a2f0-d20b6c3170d1/-/crop/10742x4257/0,1399/-/preview/-/resize/1108x/-/quality/best/-/format/auto/"
+  },
+  "SA": {
+    "iata": "SA",
+    "icao": "SAA",
+    "name": "South African Airways",
+    "country": "ZA",
+    "brand_colors": [
+      "#000000",
+      "#FFD700",
+      "#FFFFFF"
+    ],
+    "airline_image": "https://voyagesafriq.com/wp-content/uploads/2023/05/208751.jpg"
+  }
+}

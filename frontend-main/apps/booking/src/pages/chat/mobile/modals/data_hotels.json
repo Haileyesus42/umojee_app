@@ -1,0 +1,53 @@
+[
+  {
+    "id": "htl-1",
+    "name": "Riviera Tower",
+    "cityCode": "PAR",
+    "address": "12 Rue de Rivoli, Paris",
+    "rating": 4.5,
+    "price": 465,
+    "currency": "EUR",
+    "imageUrl": "https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=900&q=80",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Superior queen with city view, near Louvre and Seine.",
+    "amenities": ["Free WiFi", "Pool", "Gym", "Concierge", "Late checkout"]
+  },
+  {
+    "id": "htl-2",
+    "name": "Seaside Azure",
+    "cityCode": "BCN",
+    "address": "Passeig Maritim 22, Barcelona",
+    "rating": 4.3,
+    "price": 389,
+    "currency": "EUR",
+    "imageUrl": "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=900&q=80",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Mediterranean vibes, rooftop pool, steps from the beach.",
+    "amenities": ["Free WiFi", "Breakfast", "Rooftop Pool", "Spa"]
+  },
+  {
+    "id": "htl-3",
+    "name": "Harbor Lights",
+    "cityCode": "SFO",
+    "address": "200 Embarcadero, San Francisco",
+    "rating": 4.1,
+    "price": 312,
+    "currency": "USD",
+    "imageUrl": "https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=900&q=80",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Bayfront stay with skyline views and ferry access.",
+    "amenities": ["Free WiFi", "Parking", "Pet friendly", "24/7 front desk"]
+  }
+]

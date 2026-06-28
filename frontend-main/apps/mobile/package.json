@@ -1,0 +1,80 @@
+{
+  "name": "umojee",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "prettier:check": "prettier . --check",
+    "format": "prettier . --write",
+    "tests": "jest --watchAll=false",
+    "test": "npm run tests",
+    "build:android:preview": "npx eas-cli build --platform android --profile preview",
+    "build:android:production": "npx eas-cli build --platform android --profile production",
+    "build:ios:production": "npx eas-cli build --platform ios --profile production",
+    "submit:android": "npx eas-cli submit --platform android",
+    "submit:ios": "npx eas-cli submit --platform ios"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~6.1.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "expo": "~54.0.35",
+    "expo-auth-session": "~7.0.11",
+    "expo-av": "~16.0.8",
+    "expo-background-fetch": "~14.0.9",
+    "expo-blur": "~15.0.8",
+    "expo-camera": "~17.0.10",
+    "expo-clipboard": "~8.0.8",
+    "expo-constants": "~18.0.13",
+    "expo-file-system": "~19.0.23",
+    "expo-haptics": "~15.0.8",
+    "expo-image": "~3.0.11",
+    "expo-image-manipulator": "~14.0.8",
+    "expo-image-picker": "~17.0.11",
+    "expo-linear-gradient": "~15.0.8",
+    "expo-location": "~19.0.8",
+    "expo-modules-core": "~3.0.30",
+    "expo-navigation-bar": "~5.0.10",
+    "expo-notifications": "~0.32.17",
+    "expo-status-bar": "~3.0.9",
+    "expo-task-manager": "~14.0.9",
+    "expo-video": "~3.0.16",
+    "expo-web-browser": "~15.0.11",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-edge-to-edge": "^1.8.1",
+    "react-native-maps": "1.20.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-svg": "^15.12.1",
+    "react-native-volume-manager": "^2.0.8",
+    "react-native-web": "^0.21.0",
+    "volume-sos-service": "file:../../modules/VolumeSOSService"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^29.5.14",
+    "@types/react": "~19.1.0",
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "~10.0.0",
+    "jest-expo": "~54.0.17",
+    "prettier": "^3.8.3",
+    "react-native-svg-transformer": "^1.5.3",
+    "react-test-renderer": "^19.1.0",
+    "typescript": "~5.9.2"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "moduleNameMapper": {
+      "\\.svg$": "<rootDir>/__mocks__/svgMock.js"
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.ts"
+    ]
+  },
+  "private": true
+}

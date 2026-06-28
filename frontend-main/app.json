@@ -1,0 +1,8 @@
+{
+  "android": {
+    "package": "com.haile42.umojaairwaysfrontend"
+  },
+  "ios": {
+    "bundleIdentifier": "com.haile42.umojaairwaysfrontend"
+  }
+}

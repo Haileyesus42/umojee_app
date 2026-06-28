@@ -1,0 +1,4 @@
+<resources>
+  <string name="app_name">umojaairways-frontend</string>
+  <string name="volume_sos_service_description">Whisper uses this service to detect when you hold the volume down button for 15 seconds to trigger an emergency SOS alert. This works even when the app is closed.</string>
+</resources>

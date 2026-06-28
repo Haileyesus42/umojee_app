@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["VolumeSOSServiceModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.volumesosservice.VolumeSOSServiceModule"]
+  }
+}

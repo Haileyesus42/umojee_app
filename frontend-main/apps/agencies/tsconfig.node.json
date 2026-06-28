@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "pages": [
+        "./src/pages/*"
+      ],
+      "components": [
+        "./src/components/*"
+      ],
+      "store": [
+        "./src/store/*"
+      ],
+      "constants": [
+        "./src/constants"
+      ],
+      "common": [
+        "./src/common"
+      ]
+    }
+  },
+  "$schema": "./tsconfig.schema.json", // Ensure this path is correct, or use "https://json.schemastore.org/tsconfig"
+  "include": [
+    "vite.config.js"
+  ],
+  "paths": {
+    "pages": [
+      "./src/pages/*"
+    ],
+    "components": [
+      "./src/components/*"
+    ],
+    "store": [
+      "./src/store/*"
+    ],
+    "constants": [
+      "./src/constants"
+    ],
+    "common": [
+      "./src/common"
+    ]
+  }
+}

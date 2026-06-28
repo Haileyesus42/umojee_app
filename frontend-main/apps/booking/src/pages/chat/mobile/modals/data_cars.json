@@ -1,0 +1,56 @@
+[
+  {
+    "id": "car-1",
+    "brand": "Tesla",
+    "model": "Model 3",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80"
+    ],
+    "pricePerDay": 95,
+    "seats": 5,
+    "bags": 3,
+    "transmission": "Automatic",
+    "fuel": "Electric",
+    "pickup": "CDG Airport",
+    "dropoff": "CDG Airport",
+    "description": "Clean electric sedan with Autopilot and premium interior."
+  },
+  {
+    "id": "car-2",
+    "brand": "BMW",
+    "model": "X3",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1549923746-c502d488b3ea?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1549923746-c502d488b3ea?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1549923746-c502d488b3ea?auto=format&fit=crop&w=900&q=80"
+    ],
+    "pricePerDay": 110,
+    "seats": 5,
+    "bags": 4,
+    "transmission": "Automatic",
+    "fuel": "Hybrid",
+    "pickup": "Downtown",
+    "dropoff": "Downtown",
+    "description": "Comfortable SUV with space for family trips and luggage."
+  },
+  {
+    "id": "car-3",
+    "brand": "Volkswagen",
+    "model": "Golf",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80"
+    ],
+    "pricePerDay": 65,
+    "seats": 5,
+    "bags": 2,
+    "transmission": "Manual",
+    "fuel": "Petrol",
+    "pickup": "Train Station",
+    "dropoff": "Train Station",
+    "description": "Compact hatchback, easy to park, great on fuel."
+  }
+]

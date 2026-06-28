@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Umojee",
+    "slug": "umojee",
+    "scheme": "com.nditsolutions.umojee",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.nditsolutions.umojee",
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Umojee uses your location to show local weather on your home screen."
+      }
+    },
+    "android": {
+      "package": "com.nditsolutions.umojee",
+      "versionCode": 1,
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5fd04e37-32c5-4fb4-94bb-f7ee05ca7d86"
+      }
+    },
+    "owner": "emu-akoy",
+    "plugins": [
+      "expo-video",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Umojee uses your location to show local weather on your home screen."
+        }
+      ]
+    ]
+  }
+}

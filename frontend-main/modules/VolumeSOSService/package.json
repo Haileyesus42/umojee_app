@@ -1,0 +1,13 @@
+{
+  "name": "volume-sos-service",
+  "version": "1.0.0",
+  "description": "Volume button SOS trigger native module",
+  "main": "src/VolumeSOSServiceModule.ts",
+  "expo": {
+    "autolinking": {
+      "android": {
+        "sourceDir": "android"
+      }
+    }
+  }
+}

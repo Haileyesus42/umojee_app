@@ -1,0 +1,103 @@
+[
+  {
+    "id": "fl-1",
+    "airline": "FLYNAS",
+    "flightNo": "XY",
+    "from": "ADD",
+    "to": "DOH",
+    "stops": "ADD -> JED -> DOH (1 stop)",
+    "travelTime": "13h 15m",
+    "departure": "2025-01-12T04:00:00Z",
+    "arrival": "2025-01-12T17:15:00Z",
+    "price": 240.31,
+    "basePrice": 123,
+    "baggage": "0 bags (cabin bag included)",
+    "fareNotes": "Base fare only. Checked bag not included.",
+    "imageUrls": [
+      "https://res.cloudinary.com/dxeuetfjo/image/upload/v1750501950/news__bVYQbr_1750501950.webp",
+      "https://samchui.com/wp-content/uploads/2016/10/Ethiopian-Airlines-A350.jpg",
+      "https://corporate.ethiopianairlines.com/images/default-source/corporate-image/ground-service-1920-x-600-px.gif?sfvrsn=f5c2dd4b_7",
+      "https://corporate.ethiopianairlines.com/images/default-source/press-release-images/press-et-aircraft2024.jpg?sfvrsn=1ef039ac_1"
+    ]
+  },
+  {
+    "id": "fl-2",
+    "airline": "FLYNAS",
+    "flightNo": "XY",
+    "from": "ADD",
+    "to": "DOH",
+    "stops": "ADD -> RUH -> DOH (1 stop)",
+    "travelTime": "11h 55m",
+    "departure": "2025-02-04T05:10:00Z",
+    "arrival": "2025-02-04T17:05:00Z",
+    "price": 240.81,
+    "basePrice": 95,
+    "baggage": "30 kg checked bag (included)",
+    "fareNotes": "Checked baggage included.",
+    "imageUrls": [
+      "https://samchui.com/wp-content/uploads/2025/05/Qatar-Airways-Boeing.jpg",
+      "https://howtobecabincrew.com/wp-content/uploads/2016/09/qatar-airways-stewardese-3-2.jpg",
+      "https://www.flightradar24.com/blog/wp-content/uploads/2024/02/1703267_1684252303-1024x693.jpg"
+    ]
+  },
+  {
+    "id": "fl-3",
+    "airline": "EGYPTAIR",
+    "flightNo": "MS",
+    "from": "ADD",
+    "to": "DOH",
+    "stops": "ADD -> CAI -> DOH (1 stop)",
+    "travelTime": "8h 55m",
+    "departure": "2025-03-22T06:45:00Z",
+    "arrival": "2025-03-22T15:40:00Z",
+    "price": 385.33,
+    "basePrice": 187,
+    "baggage": "2 checked bags (23 kg each)",
+    "fareNotes": "Fastest option.",
+    "imageUrls": [
+      "https://www.ttrweekly.com/site/wp-content/uploads/2022/09/emirates-fleet-crop-scaled.jpg",
+      "https://guidetourism.net/wp-content/uploads/2022/10/0Emirates-Airline.jpg",
+      "https://dubai-immo.com/wp-content/uploads/2024/10/emirates-histoire-compagnie-aerienne-dubai.png"
+    ]
+  },
+  {
+    "id": "fl-4",
+    "airline": "EGYPTAIR",
+    "flightNo": "MS",
+    "from": "ADD",
+    "to": "DOH",
+    "stops": "ADD -> CAI -> DOH (long layover)",
+    "travelTime": "23h 15m",
+    "departure": "2025-04-02T09:20:00Z",
+    "arrival": "2025-04-03T08:35:00Z",
+    "price": 386.03,
+    "basePrice": 187,
+    "baggage": "2 checked bags (23 kg each)",
+    "fareNotes": "Long layover option.",
+    "imageUrls": [
+      "https://images.airlinegeeks.com/wp-content/uploads/2019/07/26201652/MS_Egyptair_787_delivery_MS3330_SUGEV_PAE_katie_bailey_07.jpeg",
+      "https://media.licdn.com/dms/image/v2/C4D22AQG4DsOP5F_6lQ/feedshare-shrink_800/feedshare-shrink_800/0/1656450777550?e=2147483647&v=beta&t=Q3qhrWXA24ygYHSnJWKDy8W2nhJ2xY7DlKu0oDENyBc",
+      "https://www.airlinemarketing.com.au/media/1109/ms-2.png?mode=pad&width=1140&height=550&rnd=133954183330000000"
+    ]
+  },
+  {
+    "id": "fl-5",
+    "airline": "SAUDI ARABIAN",
+    "flightNo": "SV",
+    "from": "ADD",
+    "to": "DOH",
+    "stops": "ADD -> RUH -> DOH (1 stop)",
+    "travelTime": "15h 25m",
+    "departure": "2025-05-04T12:10:00Z",
+    "arrival": "2025-05-05T03:35:00Z",
+    "price": 389.91,
+    "basePrice": 301,
+    "baggage": "1 checked bag (23 kg) + cabin",
+    "fareNotes": "Basic Eco fare: change-fee coverage, refundable, upgrade eligible, 60% miles credit.",
+    "imageUrls": [
+      "https://www.leaders-mena.com/leaders/uploads/2023/10/1249046-70593937.jpg",
+      "https://www.travelustaad.com/Content/B2C_2024/images/Airline/Saudi_Airline.jpg",
+      "https://economysaudiarabia.com/wp-content/uploads/sites/2/2024/09/Saudia-Medan.jpg"
+    ]
+  }
+]

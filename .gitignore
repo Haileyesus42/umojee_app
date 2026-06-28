@@ -47,3 +47,6 @@ build/
 coverage/
 .coverage
 htmlcov/
+
+# Lock files (regenerated on install)
+package-lock.json

@@ -1,0 +1,22 @@
+export const DEFAULT_FLIGHT_FORM = {
+  flightNumber: '',
+  duration: 1,
+  TotalSeatsCapacity: 1,
+  stoppageCount: 0,
+  airline: 'Umoja Airways',
+  departureAirport: '',
+  arrivalAirport: '',
+  departureAirportAcronym: '',
+  arrivalAirportAcronym: '',
+  departureTime: new Date(),
+  arrivalTime: new Date(),
+  flightStatus: 'ON-TIME',
+  price: {
+    currency: 'USD',
+    oneway: 0,
+    roundtrip: 0,
+  },
+  gate: '',
+  terminal: '',
+  runway: '',
+};

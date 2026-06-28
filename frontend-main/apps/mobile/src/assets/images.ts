@@ -1,0 +1,17 @@
+export const logoImage = require('../../assets/images/logo.png');
+export const popupNotificationLogoImage = require('../../assets/images/popup_notification_logo.png');
+export const itineraryLhrImage = require('../../assets/images/itinerary-lhr.png');
+export const boardingPassImage = require('../../assets/images/boarding-pass.png');
+export const chatUserAvatarImage = require('../../assets/images/chat-user-avatar.png');
+export const companionAvatarImage = require('../../assets/images/companion-avatar.jpg');
+export const defaultProfileImage = require('../../assets/images/Circle-icons-profile.svg.png');
+export const applePayLogoImage = require('../../assets/images/payment_methods/apple_pay_logo.png');
+export const figmaUmojeeEmblemImage = require('../../assets/images/umojee-emblem-figma.png');
+export const googleGLogoImage = require('../../assets/images/Google__G__logo.png');
+export const googlePayLogoImage = require('../../assets/images/payment_methods/google_pay_logo.png');
+export const handWaveImage = require('../../assets/images/hand-wave.png');
+export const nexusAiAgentEmblemImage = require('../../assets/images/nexus-ai-agent-emblem.png');
+export const nexusEmblemImage = require('../../assets/images/Nexus_Emblem.png');
+export const nexusAiEmblemImage = require('../../assets/images/Nexus_AI_Emblem.png');
+export const samsungWalletLogoImage = require('../../assets/images/payment_methods/samsung_wallet_logo.png');
+export const unityChatAvatarImage = require('../../assets/images/unity-chat-avatar.png');

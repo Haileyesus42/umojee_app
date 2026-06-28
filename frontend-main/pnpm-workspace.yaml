@@ -1,0 +1,4 @@
+# Adopted in a future MR. When pnpm workspaces are enabled, root install will manage all apps.
+packages:
+  - 'apps/*'
+  - 'packages/*'

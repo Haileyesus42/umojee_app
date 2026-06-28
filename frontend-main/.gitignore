@@ -1,0 +1,52 @@
+# Env files — NEVER commit. Use .env.example. Production secrets via Infisical (planned).
+.env
+.env.local
+.env.*.local
+.env-prod
+.env.production
+.env.*.production
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.Zone.Identifier
+.idea/
+.vscode/
+
+# Node
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+*.log
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.expo/
+.expo-shared/
+*.tgz
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Vite junk
+vite.config.js.timestamp-*
+
+# Per-app local artifacts
+**/.cache/
+**/.parcel-cache/
+
+# Build outputs & binaries
+*.apk
+*.aab
+*.ipa
+android/app/build/
+ios/build/
+build/
+
+# Lock files
+package-lock.json
