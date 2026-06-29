@@ -38,8 +38,8 @@ type LoginScreenProps = {
   onOpenRegister: () => void;
   onSignIn: (credentials: LoginCredentials) => Promise<AuthResponse | { status: string }>;
   onSignInWithGoogle: (credentials: GoogleAuthCredentials) => Promise<AuthResponse>;
-
-
+  onSignInWithBiometric?: (user: BiometricUser, type: 'face' | 'palm') => void;
+  onOpenBiometricLogin?: (user: BiometricUser) => void;
   onTokenUpdate?: (token: string) => Promise<void>;
   onUserUpdate?: (user: AuthUser) => Promise<void>;
 };
@@ -218,7 +218,8 @@ export function LoginScreen({
   onOpenRegister,
   onSignIn,
   onSignInWithGoogle,
-
+  onSignInWithBiometric,
+  onOpenBiometricLogin,
   onTokenUpdate,
   onUserUpdate,
 }: LoginScreenProps) {
@@ -481,7 +482,7 @@ export function LoginScreen({
                 </Text>
               </Pressable>
 
-              {console.log('[Login] hasCached:', hasCachedBiometricUser, 'hasCallback:', !!onOpenBiometricLogin) || (hasCachedBiometricUser && onOpenBiometricLogin && (
+              {(hasRememberedUsers && onOpenBiometricLogin) && (
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel="Sign in with biometrics"
@@ -495,9 +496,8 @@ export function LoginScreen({
                 >
                   <BiometricIcon />
                 </Pressable>
-              ))}
+              )}
             </View>
-          </View>
         </>
       )}
 

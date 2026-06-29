@@ -74,8 +74,8 @@ userRouter.post("/2fa/disable", Clientprotect, DisableTwoFactor);
 userRouter.post("/revealSensitiveDocument", Clientprotect, RevealSensitiveTravelDocument);
 userRouter.get("/getMe", Clientprotect, GetUser);
 userRouter.put('/avatar/:id/photo', clientUpload.single('photo'), updateClientProfilePhoto);
-userRouter.delete('/deleteall', deleteAllClients);
-userRouter.get('/getall', getAllClients);
+userRouter.delete('/deleteall', Clientprotect, deleteAllClients);
+userRouter.get('/getall', Clientprotect, getAllClients);
 
 // flightRouter.get('/search', Clientprotect, searchFlights);
 flightRouter.get("/search", searchFlights);
@@ -88,7 +88,7 @@ bookingRouter.post("/checkout-session", Clientprotect, getCheckoutSession);
 bookingRouter.get("/getBooking", Clientprotect, bookingController.getBooking);
 bookingRouter.get("/getBookings", Clientprotect, bookingController.getAllBookings); // New route
 bookingRouter.post("/cancel/:bookingId", Clientprotect, bookingController.cancelBooking);
-bookingRouter.put("/update", bookingController.updateBooking);
+bookingRouter.put("/update", Clientprotect, bookingController.updateBooking);
 
 notificationRouter.get("/getall", Clientprotect, getAllNotifications);
 notificationRouter.patch("/updateseen/:id", Clientprotect, updateNotificationSeen);

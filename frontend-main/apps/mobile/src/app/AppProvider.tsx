@@ -33,41 +33,6 @@ import { triggerEmergencyWebhook } from '../api/emergency';
 import VolumeSOSServiceModule from '../modules/VolumeSOSService/VolumeSOSServiceModule';
 
 
-// Save token for background service
-useEffect(() => {
-  if (!authSession.token || Platform.OS !== 'android') return;
-  try {
-    // Store token in SharedPreferences via a simple native call
-    VolumeSOSServiceModule.saveToken(authSession.token);
-  } catch (e) {}
-}, [authSession.token]);
-
-const sosInProgress = useRef(false);
-
-useVolumeSOSTrigger(async () => {
-  if (sosInProgress.current) return;
-  sosInProgress.current = true;
-  const token = authSession.token;
-  if (!token) {
-    sosInProgress.current = false;
-    return;
-  }
-  try {
-    console.log('[VolumeSOSTrigger] 🚨 SOS triggered via volume button!');
-    await triggerEmergencyWebhook(token, 'sos');
-    console.log('[VolumeSOSTrigger] ✅ SOS webhook sent successfully');
-  } catch (error) {
-    console.error('[VolumeSOSTrigger] ❌ SOS webhook failed:', error);
-  } finally {
-    // Reset after 30 seconds
-    setTimeout(() => {
-      sosInProgress.current = false;
-      try {
-        VolumeSOSServiceModule.resetCooldown();
-      } catch (e) {}
-    }, 30000);
-  }
-});
 
 const LIVE_LOCATION_INTERVAL_MS = 60000;
 const LIVE_MODE_STORAGE_KEY_PREFIX = 'umojee.liveJourneyMonitor';
@@ -353,6 +318,13 @@ export function AppProvider() {
       console.error('[VolumeSOSTrigger] ❌ SOS webhook failed:', error);
     }
   });
+
+  useEffect(() => {
+    if (!authSession.token || Platform.OS !== 'android') return;
+    try {
+      VolumeSOSServiceModule.saveToken(authSession.token);
+    } catch (e) {}
+  }, [authSession.token]);
 
 
   const journeyWebSocketRef =

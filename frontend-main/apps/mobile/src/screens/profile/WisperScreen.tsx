@@ -16,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Path } from 'react-native-svg';
 
 import RightArrowIcon from '../../../assets/icons/right-arrow.svg';
 import ContactsIcon from '../../../assets/icons/whisper/contacts-book-3-line.svg';
@@ -141,14 +141,6 @@ type WisperScreenProps = {
   token: string | null;
 };
 
-type ProfilePageLabel =
-  | 'Profile'
-  | 'Documents'
-  | 'Companions'
-  | 'Expenses'
-  | 'Whisper'
-  | 'Preferences'
-  | 'Security';
 
 type ContactFormData = {
   name: string;
@@ -166,15 +158,6 @@ type DisplayContact = {
   priorityLabel?: string;
 };
 
-const profilePages: { label: ProfilePageLabel; icon: typeof UserIcon }[] = [
-  { label: 'Profile', icon: UserIcon },
-  { label: 'Documents', icon: DocumentsIcon },
-  { label: 'Companions', icon: CompanionsIcon },
-  { label: 'Expenses', icon: ExpensesIcon },
-  { label: 'Whisper', icon: SpeakMenuIcon },
-  { label: 'Preferences', icon: SettingsIcon },
-  { label: 'Security', icon: LockIcon },
-];
 
 const whisperSettings = [
   {
@@ -233,7 +216,6 @@ export function WisperScreen({
   profileImageUri,
   token,
 }: WisperScreenProps) {
-  const [isPageMenuOpen, setIsPageMenuOpen] = useState(false);
   const [settings, setSettings] = useState(whisperSettings);
   const [settingsExpanded, setSettingsExpanded] = useState(true);
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
@@ -243,6 +225,8 @@ export function WisperScreen({
   const [editingContact, setEditingContact] = useState<EmergencyContact | null>(null);
   const [saving, setSaving] = useState(false);
   const [sosTriggering, setSosTriggering] = useState(false);
+  const [volumeTrigger, setVolumeTrigger] = useState<'up' | 'down' | 'both'>('both');
+  const [isVolumeTriggerOpen, setIsVolumeTriggerOpen] = useState(false);
   const dropdownTranslateY = useRef(new Animated.Value(330)).current;
 
   useEffect(() => {
@@ -276,17 +260,7 @@ export function WisperScreen({
     }
   };
 
-  const handlePagePress = (label: ProfilePageLabel) => {
-    setIsPageMenuOpen(false);
-    if (label === 'Profile') onOpenProfile();
-    if (label === 'Documents') onOpenDocuments();
-    if (label === 'Companions') onOpenCompanions();
-    if (label === 'Expenses') onOpenExpenses();
-    if (label === 'Preferences') onOpenPreferences();
-    if (label === 'Security') onOpenSecurity();
-  };
-
-  const toggleSetting = (title: string) => {
+const toggleSetting = (title: string) => {
     setSettings((currentSettings) =>
       currentSettings.map((item) =>
         item.title === title ? { ...item, enabled: !item.enabled } : item,
@@ -493,42 +467,13 @@ export function WisperScreen({
         showsVerticalScrollIndicator={false}
       >
         <Animated.View style={{ transform: [{ translateY: dropdownTranslateY }] }}>
-          {/* ===== Header with Whisper toggle + SOS icon ===== */}
+          {/* ===== Header ===== */}
           <View style={[styles.profileHero, styles.profileHeroCompact]}>
             <View style={localStyles.whisperHeaderRow}>
-              <Pressable
-                accessibilityLabel="Open profile page menu"
-                accessibilityRole="button"
-                onPress={() => setIsPageMenuOpen(true)}
-                style={({ pressed }) => [
-                  styles.profilePageToggle,
-                  styles.profilePageToggleCompact,
-                  pressed && styles.pressedFeedback,
-                ]}
-              >
+              <View style={[styles.profilePageToggle, styles.profilePageToggleCompact]}>
                 <SpeakIcon color={colors.blue} height={20} width={20} />
                 <Text style={styles.profilePageToggleText}>Whisper</Text>
-                <ChevronDownIcon size={20} />
-              </Pressable>
-
-              {/* ===== Simple SOS Icon Button (Right Side) ===== */}
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Activate Emergency SOS"
-                disabled={sosTriggering}
-                onPress={confirmSosTrigger}
-                style={({ pressed }) => [
-                  localStyles.sosHeaderButton,
-                  pressed && !sosTriggering && localStyles.sosHeaderButtonPressed,
-                  sosTriggering && localStyles.sosHeaderButtonDisabled,
-                ]}
-              >
-                {sosTriggering ? (
-                  <ActivityIndicator size="small" color="#FFFFFF" />
-                ) : (
-                  <SosIconWhite size={18} />
-                )}
-              </Pressable>
+              </View>
             </View>
           </View>
 
@@ -543,6 +488,57 @@ export function WisperScreen({
             </View>
 
             <View style={styles.profileWhisperForm}>
+              {/* ===== Volume Button Trigger ===== */}
+              <WhisperSection icon={<VolumeIcon />} title="Volume Button Trigger">
+                <View style={localStyles.volumePickerWrapper}>
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => setIsVolumeTriggerOpen((o) => !o)}
+                    style={({ pressed }) => [
+                      styles.profilePageToggle,
+                      localStyles.volumeTriggerToggle,
+                      pressed && styles.pressedFeedback,
+                    ]}
+                  >
+                    <VolumeIcon />
+                    <Text style={styles.profilePageToggleText}>
+                      {volumeTrigger === 'up' ? 'Volume Up' : volumeTrigger === 'down' ? 'Volume Down' : 'Both Buttons'}
+                    </Text>
+                    <ChevronDownIcon
+                      size={20}
+                      style={isVolumeTriggerOpen ? localStyles.chevronIconExpanded : localStyles.chevronIcon}
+                    />
+                  </Pressable>
+                  {isVolumeTriggerOpen && (
+                    <View style={localStyles.volumeInlineMenu}>
+                      {([
+                        { value: 'up', label: 'Volume Up' },
+                        { value: 'down', label: 'Volume Down' },
+                        { value: 'both', label: 'Both Buttons' },
+                      ] as const).map(({ value, label }, index) => (
+                        <Pressable
+                          key={value}
+                          accessibilityRole="menuitem"
+                          onPress={() => { setVolumeTrigger(value); setIsVolumeTriggerOpen(false); }}
+                          style={({ pressed }) => [
+                            localStyles.volumeInlineOption,
+                            index > 0 && localStyles.volumeInlineOptionDivider,
+                            pressed && styles.pressedFeedback,
+                          ]}
+                        >
+                          <Text style={[
+                            localStyles.volumeInlineOptionText,
+                            volumeTrigger === value && localStyles.volumeOptionSelected,
+                          ]}>
+                            {label}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              </WhisperSection>
+
               <WhisperSection icon={<DiamondIcon height={20} width={20} />} title="Code Word">
                 <View style={localStyles.codeWordCard}>
                   <View>
@@ -682,6 +678,24 @@ export function WisperScreen({
         <ArrowLeftIcon />
       </Pressable>
 
+      <Pressable
+        accessibilityLabel="Activate Emergency SOS"
+        accessibilityRole="button"
+        disabled={sosTriggering}
+        onPress={confirmSosTrigger}
+        style={({ pressed }) => [
+          localStyles.sosHeaderButton,
+          pressed && !sosTriggering && localStyles.sosHeaderButtonPressed,
+          sosTriggering && localStyles.sosHeaderButtonDisabled,
+        ]}
+      >
+        {sosTriggering ? (
+          <ActivityIndicator size="small" color="#FFFFFF" />
+        ) : (
+          <SosIconWhite size={18} />
+        )}
+      </Pressable>
+
       <FooterWithMenu
         notificationUnreadCount={notificationUnreadCount}
         onLogout={onLogout}
@@ -696,41 +710,6 @@ export function WisperScreen({
         source="profilePreferences"
       />
 
-      <Modal
-        animationType="fade"
-        onRequestClose={() => setIsPageMenuOpen(false)}
-        transparent
-        visible={isPageMenuOpen}
-      >
-        <Pressable
-          accessibilityLabel="Close profile page menu"
-          onPress={() => setIsPageMenuOpen(false)}
-          style={styles.profileMenuOverlay}
-        >
-          <Pressable style={[styles.profileMenuCard, localStyles.menuCard]}>
-            <ScrollView
-              contentContainerStyle={styles.profileMenuScrollContent}
-              showsVerticalScrollIndicator={false}
-            >
-              {profilePages.map(({ label, icon: Icon }, index) => (
-                <Pressable
-                  accessibilityRole="button"
-                  key={label}
-                  onPress={() => handlePagePress(label)}
-                  style={({ pressed }) => [
-                    styles.profileMenuItem,
-                    index > 0 && styles.profileMenuItemDivider,
-                    pressed && styles.pressedFeedback,
-                  ]}
-                >
-                  <Icon color={colors.blue} size={20} />
-                  <Text style={styles.profileMenuItemText}>{label}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
 
       {/* Add Contact Modal */}
       <ContactFormModal
@@ -1043,6 +1022,17 @@ function ArrowLeftIcon() {
   return <RightArrowIcon color="#FFFFFF" height={18} style={styles.profileBackIcon} width={18} />;
 }
 
+function VolumeIcon() {
+  return (
+    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+      <Path d="M11 5L6 9H2v6h4l5 4V5Z" stroke={colors.blue} strokeWidth={1.8} strokeLinejoin="round" />
+      <Path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke={colors.blue} strokeWidth={1.8} strokeLinecap="round" />
+      <Path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke={colors.blue} strokeWidth={1.8} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+
 function ChevronDownIcon({ size, style }: { size: number; style?: any }) {
   return (
     <Svg height={size} viewBox="0 0 24 24" width={size} fill="none" style={style}>
@@ -1098,92 +1088,6 @@ function SosIconWhite({ size = 20 }: { size?: number }) {
   );
 }
 
-function DocumentsIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return (
-    <Svg height={size} viewBox="0 0 24 24" width={size} fill="none">
-      <Path d="M6 4h12v16H6V4Z" stroke={color} strokeLinejoin="round" strokeWidth={1.9} />
-      <Path d="M9 9h6M9 13h6M9 17h3" stroke={color} strokeLinecap="round" strokeWidth={1.9} />
-    </Svg>
-  );
-}
-
-function CompanionsIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return (
-    <Svg height={size} viewBox="0 0 24 24" width={size} fill="none">
-      <Circle cx={8} cy={8} r={2.5} stroke={color} strokeWidth={1.8} />
-      <Circle cx={16} cy={8} r={2.5} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M4 20c.5-3 1.8-4.5 4-4.5s3.5 1.5 4 4.5M12 20c.5-3 1.8-4.5 4-4.5s3.5 1.5 4 4.5"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function ExpensesIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return (
-    <Svg height={size} viewBox="0 0 24 24" width={size} fill="none">
-      <Path
-        d="M5 4v15h15"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-      <Path
-        d="m8 15 3.2-4 3 2.2L18 8"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-    </Svg>
-  );
-}
-
-function LockIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return (
-    <Svg height={size} viewBox="0 0 24 24" width={size} fill="none">
-      <Rect x={5} y={10} width={14} height={10} rx={2} stroke={color} strokeWidth={1.8} />
-      <Path d="M8 10V7a4 4 0 0 1 8 0v3" stroke={color} strokeWidth={1.8} />
-      <Path d="M12 14v2" stroke={color} strokeLinecap="round" strokeWidth={1.8} />
-    </Svg>
-  );
-}
-
-function SettingsIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return (
-    <Svg height={size} viewBox="0 0 24 24" width={size} fill="none">
-      <Path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Z" stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8 8 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8 8 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5L7 18a8 8 0 0 0 2.6 1.5L10 22h4l.4-2.5A8 8 0 0 0 17 18l2.4 1 2-3.5-2-1.5Z"
-        stroke={color}
-        strokeLinejoin="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function SpeakMenuIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return <SpeakIcon color={color} height={size} width={size} />;
-}
-
-function UserIcon({ color = colors.ink, size }: { color?: string; size: number }) {
-  return (
-    <Svg height={size} viewBox="0 0 24 24" width={size} fill="none">
-      <Circle cx={12} cy={8} r={4} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M5 21c.9-4 3.2-6 7-6s6.1 2 7 6"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
 
 // ---------------------------------------------------------------------
 // Local styles
@@ -1196,11 +1100,14 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 16,
+    paddingTop: 16,
   },
   sosHeaderButton: {
-    width: 30,
-    height: 30,
-    
+    position: 'absolute',
+    top: 61,
+    right: 30,
+    width: 39,
+    height: 39,
     borderRadius: 20,
     backgroundColor: '#DC2626',
     alignItems: 'center',
@@ -1335,9 +1242,6 @@ const localStyles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 14,
     opacity: 0.6,
-  },
-  menuCard: {
-    height: 180,
   },
   saveButton: {
     marginBottom: 8,
@@ -1602,5 +1506,91 @@ const localStyles = StyleSheet.create({
     color: colors.ink,
     fontSize: 15,
     fontWeight: '600',
+  },
+  volumeTriggerToggle: {
+    alignSelf: 'flex-start',
+  },
+  volumePickerCard: {
+    height: 125,
+    width: 180,
+  },
+  volumeOptionSelected: {
+    color: colors.blue,
+    fontWeight: '600',
+  },
+  volumePickerWrapper: {
+    alignSelf: 'flex-start',
+  },
+  volumeInlineMenu: {
+    marginTop: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    overflow: 'hidden',
+    width: 180,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  volumeInlineOption: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  volumeInlineOptionDivider: {
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+  },
+  volumeInlineOptionText: {
+    fontSize: 14,
+    color: colors.ink,
+  },
+  volumeDropdownButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    backgroundColor: '#F8F9FA',
+  },
+  volumeDropdownValue: {
+    fontSize: 14,
+    color: colors.ink,
+    fontWeight: '400',
+  },
+  volumeDropdownMenu: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    marginTop: 4,
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+  },
+  volumeDropdownOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  volumeDropdownOptionDivider: {
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+  },
+  volumeDropdownOptionSelected: {
+    backgroundColor: '#F0F4FF',
+  },
+  volumeDropdownOptionText: {
+    fontSize: 14,
+    color: colors.ink,
+  },
+  volumeDropdownOptionTextSelected: {
+    color: colors.blue,
+    fontWeight: '500',
   },
 });

@@ -30,6 +30,7 @@ import { styles as sharedStyles } from '../../theme/styles';
 type BiometricEnrollmentScreenProps = {
   mode: 'face' | 'palm';
   userId: string;
+  token?: string;
   notificationUnreadCount?: number;
   onBack: () => void;
   onEnrolled: () => void;
@@ -71,6 +72,7 @@ const copy = {
 export function BiometricEnrollmentScreen({
   mode,
   userId,
+  token,
   notificationUnreadCount = 0,
   onBack,
   onEnrolled,
@@ -111,9 +113,9 @@ const handlePhotoTaken = useCallback(
     try {
       let result;
       if (mode === 'face') {
-        result = await enrollFace(userId, uri, 'User Face');
+        result = await enrollFace(userId, uri, 'User Face', token ?? undefined);
       } else {
-        result = await enrollPalm(userId, uri);
+        result = await enrollPalm(userId, uri, token ?? undefined);
       }
 
       // ✅ Check result.success (normalized by biometrics.ts)

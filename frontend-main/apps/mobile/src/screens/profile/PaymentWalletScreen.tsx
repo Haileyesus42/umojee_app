@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import { Animated, Image, Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import RightArrowIcon from '../../../assets/icons/right-arrow.svg';
-import SpeakIcon from '../../../assets/icons/whisper/speak-line-#002AFF.svg';
 import { applePayLogoImage, googlePayLogoImage, samsungWalletLogoImage } from '../../assets/images';
 import { FooterWithMenu } from '../../components/navigation/FooterWithMenu';
 import { styles } from '../../theme/styles';
@@ -29,15 +28,6 @@ type PaymentWalletScreenProps = {
   profileImageUri?: string | null;
 };
 
-type ProfilePageLabel =
-  | 'Profile'
-  | 'Documents'
-  | 'Companions'
-  | 'Expenses'
-  | 'Whisper'
-  | 'Preferences'
-  | 'Security';
-
 type PaymentMethod = {
   action: string;
   description: string;
@@ -52,16 +42,6 @@ type Transaction = {
   meta: string;
   title: string;
 };
-
-const profilePages: { label: ProfilePageLabel; icon: typeof UserIcon }[] = [
-  { label: 'Profile', icon: UserIcon },
-  { label: 'Documents', icon: DocumentsIcon },
-  { label: 'Companions', icon: CompanionsIcon },
-  { label: 'Expenses', icon: ExpensesIcon },
-  { label: 'Whisper', icon: SpeakMenuIcon },
-  { label: 'Preferences', icon: SettingsIcon },
-  { label: 'Security', icon: LockIcon },
-];
 
 const paymentMethods: PaymentMethod[] = [
   {
@@ -126,7 +106,6 @@ export function PaymentWalletScreen({
   onOpenWhisper,
   profileImageUri,
 }: PaymentWalletScreenProps) {
-  const [isPageMenuOpen, setIsPageMenuOpen] = useState(false);
   const dropdownTranslateY = useRef(new Animated.Value(330)).current;
 
   useEffect(() => {
@@ -137,38 +116,6 @@ export function PaymentWalletScreen({
     }).start();
   }, [dropdownTranslateY]);
 
-  const handlePagePress = (label: ProfilePageLabel) => {
-    setIsPageMenuOpen(false);
-
-    if (label === 'Profile') {
-      onOpenProfile();
-    }
-
-    if (label === 'Documents') {
-      onOpenDocuments();
-    }
-
-    if (label === 'Companions') {
-      onOpenCompanions();
-    }
-
-    if (label === 'Expenses') {
-      onOpenExpenses();
-    }
-
-    if (label === 'Preferences') {
-      onOpenPreferences();
-    }
-
-    if (label === 'Security') {
-      onOpenSecurity();
-    }
-
-    if (label === 'Whisper') {
-      onOpenWhisper();
-    }
-  };
-
   return (
     <SafeAreaView edges={['left', 'right']} style={styles.profileScreen}>
       <ScrollView
@@ -176,23 +123,6 @@ export function PaymentWalletScreen({
         showsVerticalScrollIndicator={false}
       >
         <Animated.View style={{ transform: [{ translateY: dropdownTranslateY }] }}>
-          <View style={[styles.profileHero, styles.profileHeroCompact]}>
-            <Pressable
-              accessibilityLabel="Open profile page menu"
-              accessibilityRole="button"
-              onPress={() => setIsPageMenuOpen(true)}
-              style={({ pressed }) => [
-                styles.profilePageToggle,
-                styles.profilePageToggleCompact,
-                pressed && styles.pressedFeedback,
-              ]}
-            >
-              <WalletIcon color="#002AFF" size={20} />
-              <Text style={styles.profilePageToggleText}>Payments & Wallet</Text>
-              <ChevronDownIcon size={20} />
-            </Pressable>
-          </View>
-
           <View style={styles.profilePaymentMain}>
             <View style={styles.profileSectionHeading}>
               <View style={styles.profileSectionIcon}>
@@ -261,41 +191,6 @@ export function PaymentWalletScreen({
         source="profilePaymentWallet"
       />
 
-      <Modal
-        animationType="fade"
-        onRequestClose={() => setIsPageMenuOpen(false)}
-        transparent
-        visible={isPageMenuOpen}
-      >
-        <Pressable
-          accessibilityLabel="Close profile page menu"
-          onPress={() => setIsPageMenuOpen(false)}
-          style={styles.profileMenuOverlay}
-        >
-          <Pressable style={styles.profileMenuCard}>
-            <ScrollView
-              contentContainerStyle={styles.profileMenuScrollContent}
-              showsVerticalScrollIndicator={false}
-            >
-              {profilePages.map(({ label, icon: Icon }, index) => (
-                <Pressable
-                  accessibilityRole="button"
-                  key={label}
-                  onPress={() => handlePagePress(label)}
-                  style={({ pressed }) => [
-                    styles.profileMenuItem,
-                    index > 0 && styles.profileMenuItemDivider,
-                    pressed && styles.pressedFeedback,
-                  ]}
-                >
-                  <Icon color="#002AFF" size={20} />
-                  <Text style={styles.profileMenuItemText}>{label}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
     </SafeAreaView>
   );
 }
@@ -465,14 +360,6 @@ function CardIcon({ color = '#0A0A0A', size }: { color?: string; size: number })
   );
 }
 
-function ChevronDownIcon({ size }: { size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="m7 10 5 5 5-5" stroke="#0A0A0A" strokeLinecap="round" strokeWidth={2} />
-    </Svg>
-  );
-}
-
 function CryptoIcon() {
   return (
     <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -523,51 +410,6 @@ function RechargeTransactionIcon() {
   );
 }
 
-function DocumentsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M6 4h12v16H6V4Z" stroke={color} strokeLinejoin="round" strokeWidth={1.9} />
-      <Path d="M9 9h6M9 13h6M9 17h3" stroke={color} strokeLinecap="round" strokeWidth={1.9} />
-    </Svg>
-  );
-}
-
-function CompanionsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Circle cx={8} cy={8} r={2.5} stroke={color} strokeWidth={1.8} />
-      <Circle cx={16} cy={8} r={2.5} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M4 20c.5-3 1.8-4.5 4-4.5s3.5 1.5 4 4.5M12 20c.5-3 1.8-4.5 4-4.5s3.5 1.5 4 4.5"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function ExpensesIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M5 4v15h15"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-      <Path
-        d="m8 15 3.2-4 3 2.2L18 8"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-    </Svg>
-  );
-}
-
 function PlusIcon({ color, size = 16 }: { color: string; size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -585,48 +427,6 @@ function SendIcon() {
         strokeLinejoin="round"
         strokeWidth={1.8}
       />
-    </Svg>
-  );
-}
-
-function SettingsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Z" stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8 8 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8 8 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5L7 18a8 8 0 0 0 2.6 1.5L10 22h4l.4-2.5A8 8 0 0 0 17 18l2.4 1 2-3.5-2-1.5Z"
-        stroke={color}
-        strokeLinejoin="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function SpeakMenuIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return <SpeakIcon color={color} height={size} width={size} />;
-}
-
-function UserIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Circle cx={12} cy={8} r={4} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M5 21c.9-4 3.2-6 7-6s6.1 2 7 6"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function LockIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Rect x={5} y={10} width={14} height={10} rx={2} stroke={color} strokeWidth={1.8} />
-      <Path d="M8 10V7a4 4 0 0 1 8 0v3" stroke={color} strokeWidth={1.8} />
-      <Path d="M12 14v2" stroke={color} strokeLinecap="round" strokeWidth={1.8} />
     </Svg>
   );
 }

@@ -7,6 +7,7 @@ import type { UseBiometricStateReturn } from '../../hooks/useBiometricState';
 type BiometricGatekeeperProps = {
   isBiometricEnabled: boolean;
   userId?: string;
+  token?: string;
   biometricState: UseBiometricStateReturn;
   children: React.ReactNode;
   notificationUnreadCount?: number;
@@ -21,6 +22,7 @@ type BiometricGatekeeperProps = {
 export function BiometricGatekeeper({
   isBiometricEnabled,
   userId,
+  token,
   biometricState,
   children,
   notificationUnreadCount,
@@ -63,7 +65,8 @@ export function BiometricGatekeeper({
   return (
     <FaceRecognitionScreen
       userId={userId || ''}
-      hasPalm={biometricState.palmEnrolled} 
+      token={token}
+      hasPalm={biometricState.palmEnrolled}
       notificationUnreadCount={notificationUnreadCount}
       onOpenChat={onOpenChat ?? (() => undefined)}
       onOpenHome={onOpenHome}
@@ -73,7 +76,7 @@ export function BiometricGatekeeper({
       onVerified={async () => {
         console.log('[BiometricGatekeeper] ✅ Verification complete');
         // Start a new session (30 minutes)
-        await biometricState.setVerified(30);
+        await biometricState.setVerified(30 * 1000);
         if (onVerified) {
           onVerified();
         }

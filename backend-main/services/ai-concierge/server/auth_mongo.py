@@ -56,7 +56,7 @@ async def get_current_mongo_user(token: str = Depends(oauth2_scheme)):
         try:
             # Try to connect and find user, but with timeout protection
             db = get_database()
-            users_collection = db["users"]  # Assuming users are stored in 'users' collection
+            users_collection = db["clientusers"]
             
             logger.info(f"Attempting to find user with ID: {user_id}")
             
@@ -84,41 +84,16 @@ async def get_current_mongo_user(token: str = Depends(oauth2_scheme)):
                 return user
             else:
                 logger.warning(f"User not found in MongoDB: {user_id}")
-                # Instead of failing, return a minimal user object to allow the emergency webhook to function
-                # This allows the system to continue and let the emergency webhook handle the missing user case
-                return {
-                    "_id": user_id,
-                    "username": f"unknown_user_{user_id[:8]}",
-                    "email": "",
-                    "full_name": "Unknown User",
-                    "phone": "",
-                    "address": "",
-                    "current_city": "",
-                    "current_country": "",
-                    "hotel_name": "",
-                    "current_location": "",
-                    "gps_latitude": "",
-                    "gps_longitude": ""
-                }
-                
+                raise credentials_exception
+
+        except HTTPException:
+            raise
         except Exception as db_error:
             logger.error(f"MongoDB connection error: {db_error}")
-            # If MongoDB is unavailable, return a minimal user object to allow emergency functions to proceed
-            logger.warning(f"MongoDB unavailable, returning minimal user for ID: {user_id}")
-            return {
-                "_id": user_id,
-                "username": f"unknown_user_{user_id[:8]}",
-                "email": "",
-                "full_name": "Unknown User",
-                "phone": "",
-                "address": "",
-                "current_city": "",
-                "current_country": "",
-                "hotel_name": "",
-                "current_location": "",
-                "gps_latitude": "",
-                "gps_longitude": ""
-            }
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Authentication service temporarily unavailable",
+            )
         
     except JWTError as e:
         logger.error(f"JWT decoding error: {e}")

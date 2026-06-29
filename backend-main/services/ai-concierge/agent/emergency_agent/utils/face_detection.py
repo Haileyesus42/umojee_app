@@ -85,20 +85,36 @@ class FaceDetector:
             # Safe check for no detections or multiple faces
             if not detection_result.detections or len(detection_result.detections) > 1:
                 return None
-            
-            # Approximate 5 landmarks from bounding box coordinates
-            # FIXED: Grab the first element from the detection sequence safely
+
             detection = detection_result.detections[0]
+
+            # MediaPipe FaceDetector key_points order:
+            # 0=right_eye, 1=left_eye, 2=nose_tip, 3=mouth_center,
+            # 4=right_ear_tragion, 5=left_ear_tragion
+            kps = getattr(detection, 'key_points', None) or getattr(detection, 'keypoints', None)
+            if kps and len(kps) >= 4:
+                h_img, w_img = image.shape[:2]
+                landmarks = np.array([
+                    [kps[1].x * w_img, kps[1].y * h_img],  # left eye
+                    [kps[0].x * w_img, kps[0].y * h_img],  # right eye
+                    [kps[2].x * w_img, kps[2].y * h_img],  # nose
+                    [kps[3].x * w_img + (kps[1].x - kps[0].x) * w_img * 0.15,
+                     kps[3].y * h_img],                     # left mouth corner
+                    [kps[3].x * w_img - (kps[1].x - kps[0].x) * w_img * 0.15,
+                     kps[3].y * h_img],                     # right mouth corner
+                ], dtype=np.float32)
+                return landmarks
+
+            # Fallback: key_points unavailable — approximate from bounding box
+            # (less accurate but better than nothing)
             bbox = detection.bounding_box
             x, y, w, h = bbox.origin_x, bbox.origin_y, bbox.width, bbox.height
-            center_x, center_y = x + w // 2, y + h // 2
-            
             landmarks = np.array([
-                [x + w * 0.3, y + h * 0.3],  # Left eye
-                [x + w * 0.7, y + h * 0.3],  # Right eye
-                [center_x, center_y + h * 0.1],  # Nose
-                [x + w * 0.3, y + h * 0.7],  # Left mouth
-                [x + w * 0.7, y + h * 0.7]   # Right mouth
+                [x + w * 0.35, y + h * 0.35],
+                [x + w * 0.65, y + h * 0.35],
+                [x + w * 0.50, y + h * 0.55],
+                [x + w * 0.35, y + h * 0.72],
+                [x + w * 0.65, y + h * 0.72],
             ], dtype=np.float32)
             return landmarks
 

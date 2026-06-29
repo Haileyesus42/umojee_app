@@ -6,7 +6,6 @@ import {
   Alert,
   Animated,
   Image,
-  Modal,
   Pressable,
   ScrollView,
   Text,
@@ -18,7 +17,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import RightArrowIcon from '../../../assets/icons/right-arrow.svg';
-import SpeakIcon from '../../../assets/icons/whisper/speak-line-#002AFF.svg';
 import type { AuthUser } from '../../api/auth/auth';
 import {
   revealCompanionSensitiveDocument,
@@ -568,25 +566,6 @@ type CompanionDraft = {
 
 type RevealableCompanionField = 'passportNumber' | 'nationalIdNumber';
 
-type ProfilePageLabel =
-  | 'Profile'
-  | 'Documents'
-  | 'Companions'
-  | 'Expenses'
-  | 'Whisper'
-  | 'Preferences'
-  | 'Security';
-
-const profilePages: { label: ProfilePageLabel; icon: typeof UserIcon }[] = [
-  { label: 'Profile', icon: UserIcon },
-  { label: 'Documents', icon: DocumentsIcon },
-  { label: 'Companions', icon: CompanionsIcon },
-  { label: 'Expenses', icon: ExpensesIcon },
-  { label: 'Whisper', icon: SpeakMenuIcon },
-  { label: 'Preferences', icon: SettingsIcon },
-  { label: 'Security', icon: LockIcon },
-];
-
 const emptyTravelerDraft = (): CompanionDraft => ({
   type: 'traveler',
   displayName: '',
@@ -691,7 +670,6 @@ export function CompanionsScreen({
   token,
   user,
 }: CompanionsScreenProps) {
-  const [isPageMenuOpen, setIsPageMenuOpen] = useState(false);
   const {
     companions,
     deleting,
@@ -1010,34 +988,6 @@ export function CompanionsScreen({
     }
   };
 
-  const handlePagePress = (label: ProfilePageLabel) => {
-    setIsPageMenuOpen(false);
-
-    if (label === 'Profile') {
-      onOpenProfile();
-    }
-
-    if (label === 'Documents') {
-      onOpenDocuments();
-    }
-
-    if (label === 'Expenses') {
-      onOpenExpenses();
-    }
-
-    if (label === 'Preferences') {
-      onOpenPreferences();
-    }
-
-    if (label === 'Security') {
-      onOpenSecurity();
-    }
-
-    if (label === 'Whisper') {
-      onOpenWhisper();
-    }
-  };
-
   const title =
     draft.type === 'pet'
       ? draft.name || 'New Pet'
@@ -1185,23 +1135,6 @@ export function CompanionsScreen({
         showsVerticalScrollIndicator={false}
       >
         <Animated.View style={{ transform: [{ translateY: dropdownTranslateY }] }}>
-          <View style={[styles.profileHero, styles.profileHeroCompact]}>
-            <Pressable
-              accessibilityLabel="Open profile page menu"
-              accessibilityRole="button"
-              onPress={() => setIsPageMenuOpen(true)}
-              style={({ pressed }) => [
-                styles.profilePageToggle,
-                styles.profilePageToggleCompact,
-                pressed && styles.pressedFeedback,
-              ]}
-            >
-              <CompanionsIcon color="#002AFF" size={20} />
-              <Text style={styles.profilePageToggleText}>Companions</Text>
-              <ChevronDownIcon size={20} />
-            </Pressable>
-          </View>
-
           <View style={styles.profileCompanionsMain}>
             <View style={styles.profileSectionHeading}>
               <View>
@@ -1455,42 +1388,6 @@ export function CompanionsScreen({
         source="profileCompanions"
       />
 
-      <Modal
-        animationType="fade"
-        onRequestClose={() => setIsPageMenuOpen(false)}
-        transparent
-        visible={isPageMenuOpen}
-      >
-        <Pressable
-          accessibilityLabel="Close profile page menu"
-          onPress={() => setIsPageMenuOpen(false)}
-          style={styles.profileMenuOverlay}
-        >
-          <Pressable style={styles.profileMenuCard}>
-            <ScrollView
-              contentContainerStyle={styles.profileMenuScrollContent}
-              showsVerticalScrollIndicator={false}
-            >
-              {profilePages.map(({ label, icon: Icon }, index) => (
-                <Pressable
-                  accessibilityRole="button"
-                  key={label}
-                  onPress={() => handlePagePress(label)}
-                  style={({ pressed }) => [
-                    styles.profileMenuItem,
-                    index > 0 && styles.profileMenuItemDivider,
-                    pressed && styles.pressedFeedback,
-                  ]}
-                >
-                  <Icon color="#002AFF" size={20} />
-                  <Text style={styles.profileMenuItemText}>{label}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
-
       <SensitiveDocumentAccessModal
         action={revealAction}
         busy={revealingDocument}
@@ -1628,14 +1525,6 @@ function CameraIcon() {
   );
 }
 
-function ChevronDownIcon({ size }: { size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="m7 10 5 5 5-5" stroke="#0A0A0A" strokeLinecap="round" strokeWidth={2} />
-    </Svg>
-  );
-}
-
 function EyeClosedIcon() {
   return (
     <Svg width={18} height={18} viewBox="0 0 18 18" fill="none">
@@ -1658,47 +1547,6 @@ function GalleryIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function DocumentsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M6 4h12v16H6V4Z" stroke={color} strokeLinejoin="round" strokeWidth={1.9} />
-      <Path d="M9 9h6M9 13h6M9 17h3" stroke={color} strokeLinecap="round" strokeWidth={1.9} />
-    </Svg>
-  );
-}
-
-function CompanionsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 21 21" fill="none">
-      <Path
-        d="M10.5 9.625C12.9162 9.625 14.875 11.5838 14.875 14V19.25H13.125V14C13.125 12.602 12.0322 11.4593 10.6543 11.3795L10.5 11.375C9.10201 11.375 7.9593 12.4678 7.87945 13.8457L7.875 14V19.25H6.125V14C6.125 11.5838 8.08376 9.625 10.5 9.625ZM4.8125 12.25C5.05649 12.25 5.29383 12.2785 5.52134 12.3324C5.37427 12.7698 5.28389 13.2318 5.25784 13.7106L5.25 14L5.25061 14.0749C5.15162 14.0399 5.04718 14.0164 4.9389 14.006L4.8125 14C4.13026 14 3.56961 14.5205 3.50601 15.1861L3.5 15.3125V19.25H1.75V15.3125C1.75 13.6211 3.12113 12.25 4.8125 12.25ZM16.1875 12.25C17.8789 12.25 19.25 13.6211 19.25 15.3125V19.25H17.5V15.3125C17.5 14.6303 16.9795 14.0697 16.3139 14.006L16.1875 14C16.0342 14 15.887 14.0262 15.7503 14.0745L15.75 14C15.75 13.4175 15.6551 12.8573 15.4801 12.3337C15.7062 12.2785 15.9435 12.25 16.1875 12.25ZM4.8125 7C6.02062 7 7 7.97938 7 9.1875C7 10.3956 6.02062 11.375 4.8125 11.375C3.60438 11.375 2.625 10.3956 2.625 9.1875C2.625 7.97938 3.60438 7 4.8125 7ZM16.1875 7C17.3956 7 18.375 7.97938 18.375 9.1875C18.375 10.3956 17.3956 11.375 16.1875 11.375C14.9794 11.375 14 10.3956 14 9.1875C14 7.97938 14.9794 7 16.1875 7ZM4.8125 8.75C4.57088 8.75 4.375 8.94591 4.375 9.1875C4.375 9.42909 4.57088 9.625 4.8125 9.625C5.05412 9.625 5.25 9.42909 5.25 9.1875C5.25 8.94591 5.05412 8.75 4.8125 8.75ZM16.1875 8.75C15.9459 8.75 15.75 8.94591 15.75 9.1875C15.75 9.42909 15.9459 9.625 16.1875 9.625C16.4291 9.625 16.625 9.42909 16.625 9.1875C16.625 8.94591 16.4291 8.75 16.1875 8.75ZM10.5 1.75C12.433 1.75 14 3.317 14 5.25C14 7.183 12.433 8.75 10.5 8.75C8.567 8.75 7 7.183 7 5.25C7 3.317 8.567 1.75 10.5 1.75ZM10.5 3.5C9.53348 3.5 8.75 4.2835 8.75 5.25C8.75 6.2165 9.53348 7 10.5 7C11.4665 7 12.25 6.2165 12.25 5.25C12.25 4.2835 11.4665 3.5 10.5 3.5Z"
-        fill={color}
-      />
-    </Svg>
-  );
-}
-
-function ExpensesIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M5 4v15h15"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-      <Path
-        d="m8 15 3.2-4 3 2.2L18 8"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
       />
     </Svg>
   );
@@ -1736,48 +1584,6 @@ function UserAddIcon() {
         strokeWidth={1.8}
       />
       <Path d="M18 11v7M14.5 14.5h7" stroke="#002AFF" strokeLinecap="round" strokeWidth={1.8} />
-    </Svg>
-  );
-}
-
-function UserIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Circle cx={12} cy={8} r={4} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M5 21c.9-4 3.2-6 7-6s6.1 2 7 6"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function SettingsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Z" stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8 8 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8 8 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5L7 18a8 8 0 0 0 2.6 1.5L10 22h4l.4-2.5A8 8 0 0 0 17 18l2.4 1 2-3.5-2-1.5Z"
-        stroke={color}
-        strokeLinejoin="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function SpeakMenuIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return <SpeakIcon color={color} height={size} width={size} />;
-}
-
-function LockIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Rect x={5} y={10} width={14} height={10} rx={2} stroke={color} strokeWidth={1.8} />
-      <Path d="M8 10V7a4 4 0 0 1 8 0v3" stroke={color} strokeWidth={1.8} />
-      <Path d="M12 14v2" stroke={color} strokeLinecap="round" strokeWidth={1.8} />
     </Svg>
   );
 }

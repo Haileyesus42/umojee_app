@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 
 const DEFAULT_AI_BACKEND_URL = 'http://localhost:8000';
 // const DEFAULT_NODE_BACKEND_URL = 'https://node-server-seven-coral.vercel.app';
-const DEFAULT_NODE_BACKEND_URL = 'http://localhost:4001';
+const DEFAULT_NODE_BACKEND_URL = 'http://localhost:3001';
 // const ANDROID_EMULATOR_NODE_BACKEND_URL = 'https://node-server-seven-coral.vercel.app';
-const ANDROID_EMULATOR_NODE_BACKEND_URL = 'http://10.0.2.2:4001';
+const ANDROID_EMULATOR_NODE_BACKEND_URL = 'http://10.0.2.2:3001';
 const REQUEST_TIMEOUT_MS = 50000;
 
 export type FetchWithFallbackInit = RequestInit & {

@@ -32,13 +32,16 @@ import { styles as sharedStyles } from '../../theme/styles';
 
 
 type FaceRecognitionScreenProps = {
-  userId: string;  // ← NEW
+  userId: string;
+  token?: string;
+  userName?: string;
   hasPalm?: boolean;
   notificationUnreadCount?: number;
-  onOpenChat: () => void;
-  onOpenHome: () => void;
+  onBack?: () => void;
+  onOpenChat?: () => void;
+  onOpenHome?: () => void;
   onOpenJourneys?: () => void;
-  onOpenNotifications: () => void;
+  onOpenNotifications?: () => void;
   onOpenTravelSupport?: () => void;
   onVerified: () => void;
   purpose?: 'account' | 'wallet';
@@ -72,7 +75,8 @@ function createCancellableDelay(ms: number) {
 // Main Component
 // ---------------------------------------------------------------------
 export function FaceRecognitionScreen({
-  userId,  // ← NEW
+  userId,
+  token,
   hasPalm = false,
   notificationUnreadCount = 0,
   onOpenChat,
@@ -129,9 +133,9 @@ export function FaceRecognitionScreen({
     try {
       let result;
       if (verificationStep === 'faceScanning') {
-        result = await verifyFace(uri, userId);
+        result = await verifyFace(uri, userId, token ?? undefined);
       } else {
-        result = await verifyPalm(uri, userId);
+        result = await verifyPalm(uri, userId, token ?? undefined);
       }
 
       console.log('[FaceRecognition] Verification result:', result);
@@ -278,8 +282,8 @@ const handleScanFramePress = async () => {
       <SafeAreaView edges={['top']} style={sharedStyles.headerSafeArea}>
         <Header
           notificationUnreadCount={notificationUnreadCount}
-          onOpenHome={onOpenHome}
-          onOpenNotifications={onOpenNotifications}
+          onOpenHome={onOpenHome ?? (() => {})}
+          onOpenNotifications={onOpenNotifications ?? (() => {})}
         />
       </SafeAreaView>
 
@@ -360,9 +364,9 @@ const handleScanFramePress = async () => {
       </View>
 
       <Footer
-        onOpenChat={onOpenChat}
+        onOpenChat={onOpenChat ?? (() => {})}
         onOpenFlow={onOpenTravelSupport}
-        onOpenHome={onOpenHome}
+        onOpenHome={onOpenHome ?? (() => {})}
         onOpenTrips={onOpenJourneys}
         source="home"
       />

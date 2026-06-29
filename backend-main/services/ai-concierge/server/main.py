@@ -276,7 +276,7 @@ async def lifespan(app: FastAPI):
     finally:
         # Cleanup
         await controller.stop()
-        await close_mongo_client()
+        close_mongo_client()
 
 
 app = FastAPI(title="Umoja AI Backend", version="0.1.0", lifespan=lifespan)
@@ -310,79 +310,63 @@ async def extract_face_embedding_endpoint(image_data: UploadFile = File(...)):
 
 @app.post("/v1/face/verify")
 async def verify_face_image(
-    user_id: str = Form(...),
-    image_data: UploadFile = File(...)   # Updated to accept image file
+    image_data: UploadFile = File(...),
+    current_user: dict = Depends(get_current_mongo_user),
 ):
+    """
+    Biometric 2FA — verify that the uploaded face matches the enrolled face for
+    the authenticated user.  user_id is always derived from the JWT; callers
+    cannot impersonate another user by supplying a different ID.
+    """
+    import numpy as np
+    user_id = str(current_user["_id"])
+
     try:
-        # Read the uploaded image
         contents = await image_data.read()
 
-        # Extract embedding from the image using the same processor as the biometric server
-        from agent.emergency_agent.biometric.face_processor import FaceProcessor
-        processor = FaceProcessor()
-        result = processor.extract_embedding(contents)  # Pass raw bytes, not decoded image
-        
-        # Check if face was detected
+        # Extract embedding from the frame
+        result = biometric_server.face_processor.extract_embedding(contents)
         if not result.get("face_detected"):
-            return {"match": False, "message": result.get("message", "No face detected")}
-            
-        embedding = result["embedding"]
-        
-        # Ensure embedding is a numpy array for computation
-        import numpy as np
-        if isinstance(embedding, list):
-            embedding = np.array(embedding)
-        elif isinstance(embedding, dict):
-            # If embedding itself is a dict, extract the actual embedding array
-            if "embedding" in embedding:
-                embedding = np.array(embedding["embedding"])
-            else:
-                raise HTTPException(status_code=400, detail="Invalid embedding format")
+            raise HTTPException(
+                status_code=400,
+                detail=result.get("message", "No face detected"),
+            )
 
-        # Retrieve stored embedding from database
+        embedding = np.array(result["embedding"])
+
+        # Step 3: compare against stored enrollment
         from server.emergency_server.models.biometric.user_face import UserFace
         from server.emergency_server.core.database.database import get_sync_face_db
-        from sqlalchemy.orm import Session
-        
-        # Get database session
+
         db_gen = get_sync_face_db()
-        db: Session = next(db_gen)
-        
+        db = next(db_gen)
         try:
             user_face = db.query(UserFace).filter(UserFace.user_id == user_id).first()
             if not user_face:
-                return {"match": False, "message": "No enrolled face for this user"}
+                raise HTTPException(status_code=404, detail="No enrolled face for this user")
 
-            stored_embedding = user_face.embedding
-            
-            if stored_embedding is None:
-                return {"match": False, "message": "Stored embedding is invalid"}
+            stored = np.array(user_face.embedding)
+            similarity = float(np.dot(embedding, stored) / (np.linalg.norm(embedding) * np.linalg.norm(stored)))
+            threshold = biometric_server.face_processor.similarity_threshold  # 0.8
+            is_match = similarity >= threshold
 
-            # Ensure stored embedding is also a numpy array
-            if isinstance(stored_embedding, list):
-                stored_embedding = np.array(stored_embedding)
-                
-            # Calculate cosine similarity
-            from numpy.linalg import norm
-            similarity = np.dot(embedding, stored_embedding) / (norm(embedding) * norm(stored_embedding))
-            threshold = 0.6
-            is_match = bool(similarity > threshold)  # Convert numpy bool to Python bool
-
-            return {"match": is_match, "similarity": float(similarity)}
+            return {"match": is_match, "similarity": similarity, "threshold": threshold}
         finally:
             db.close()
+
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Error in verify_face_image: {str(e)}", exc_info=True)
+        logger.error(f"Error in verify_face_image: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Face verification failed: {str(e)}")
 
 @app.post("/v1/face/enroll")
 async def enroll_face_endpoint(
-    user_id: str = Form(...),
     name: str = Form(...),
-    image_data: UploadFile = File(...)
+    image_data: UploadFile = File(...),
+    current_user: dict = Depends(get_current_mongo_user),
 ):
-    # Call the actual implementation from the biometric server
-    # The biometric server already handles upsert logic internally
+    user_id = str(current_user["_id"])
     return await biometric_server.enroll_face(user_id, name, image_data)
 
 @app.post("/v1/face/liveness")
@@ -405,16 +389,18 @@ async def extract_palm_features_endpoint(image_data: UploadFile = File(...)):
 
 @app.post("/v1/palm/verify")
 async def verify_palm_for_user_endpoint(
-    user_id: str = Form(...),
-    image_data: UploadFile = File(...)
+    image_data: UploadFile = File(...),
+    current_user: dict = Depends(get_current_mongo_user),
 ):
+    user_id = str(current_user["_id"])
     return await biometric_server.verify_palm_for_user(user_id, image_data)
 
 @app.post("/v1/palm/enroll")
 async def enroll_palm_endpoint(
-    user_id: str = Form(...),
-    image_data: UploadFile = File(...)
+    image_data: UploadFile = File(...),
+    current_user: dict = Depends(get_current_mongo_user),
 ):
+    user_id = str(current_user["_id"])
     return await biometric_server.enroll_palm(user_id, image_data)
 
 @app.get("/v1/palm/status")
@@ -424,6 +410,24 @@ def palm_service_status():
         "status": "available",
         "operations": ["extract-features", "verify", "enroll"]
     }
+
+# ==================== Biometric Status Endpoint ====================
+
+@app.get("/v1/biometrics/status/{user_id}")
+def biometrics_status(user_id: str):
+    """Check whether a user has face and/or palm enrolled. Used by mobile to sync local cache."""
+    from server.emergency_server.core.database.database import get_sync_face_db
+    from server.emergency_server.models.biometric.user_face import UserFace
+    from server.emergency_server.models.biometric.palm_template import PalmTemplate
+
+    db = next(get_sync_face_db())
+    try:
+        has_face = db.query(UserFace).filter(UserFace.user_id == user_id).first() is not None
+        has_palm = db.query(PalmTemplate).filter(PalmTemplate.user_id == user_id).first() is not None
+    finally:
+        db.close()
+
+    return {"hasFace": has_face, "hasPalm": has_palm}
 
 # ==================== Voice Endpoints ====================
 

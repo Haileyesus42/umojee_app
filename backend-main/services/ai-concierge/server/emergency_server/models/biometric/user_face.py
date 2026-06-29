@@ -28,12 +28,17 @@ class UserFace(FaceBase):
 
 
 def insert_face_embedding(db_session, user_id: str, name: str, embedding: list):
-    """Insert a new face embedding into the database"""
-    user_face = UserFace(
-        user_id=user_id,
-        name=name,
-        embedding=embedding
-    )
+    """Upsert a face embedding — updates an existing record if present, inserts otherwise."""
+    from datetime import datetime
+    existing = db_session.query(UserFace).filter(UserFace.user_id == user_id).first()
+    if existing:
+        existing.name = name
+        existing.embedding = embedding
+        existing.updated_at = datetime.utcnow()
+        db_session.commit()
+        db_session.refresh(existing)
+        return existing
+    user_face = UserFace(user_id=user_id, name=name, embedding=embedding)
     db_session.add(user_face)
     db_session.commit()
     db_session.refresh(user_face)

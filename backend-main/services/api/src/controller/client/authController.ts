@@ -486,9 +486,6 @@ export const LoginWithGoogle = async (req: Request, res: Response) => {
     if (inviteToken) {
       await resolveInviteAfterSignup(String(user._id), String(inviteToken));
     }
-    if (inviteToken) {
-      await resolveInviteAfterSignup(String(user._id), inviteToken);
-    }
     await createSendToken(user, 200, res);
     console.log('User authenticated with Google:', user.email);
   } catch (error: any) {
@@ -765,9 +762,6 @@ export const login = async (req: Request, res: Response) => {
       
       // Generate JWT token and send response
       createSendToken(user, 201, res);
-      
-      const url = '';
-      await new Email(newUser, url).sendWelcome();
       return;
     }
 

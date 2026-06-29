@@ -1,7 +1,8 @@
 // src/api/biometrics.ts
 
 const PYTHON_API_URL = process.env.EXPO_PUBLIC_FASTAPI_BACKEND_URL || 'http://192.168.43.98:8000';
-const REQUEST_TIMEOUT_MS = 10000; // 10 seconds
+const ENROLL_TIMEOUT_MS = 30000;   // enrollment: liveness + single inference
+const VERIFY_TIMEOUT_MS = 30000;   // verification: single inference
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
 
@@ -84,7 +85,7 @@ type BiometricVerifyResult = {
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
-  timeoutMs: number = REQUEST_TIMEOUT_MS
+  timeoutMs: number
 ): Promise<Response> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -115,6 +116,7 @@ async function fetchWithTimeout(
 async function fetchWithRetry(
   url: string,
   options: RequestInit,
+  timeoutMs: number,
   maxRetries: number = MAX_RETRIES,
   retryDelayMs: number = RETRY_DELAY_MS
 ): Promise<Response> {
@@ -127,7 +129,7 @@ async function fetchWithRetry(
         await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
       }
 
-      const response = await fetchWithTimeout(url, options);
+      const response = await fetchWithTimeout(url, options, timeoutMs);
       return response;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
@@ -302,7 +304,8 @@ function parseVerificationResponse(
 export async function enrollFace(
   userId: string,
   imageUri: string,
-  name?: string
+  name?: string,
+  token?: string,
 ): Promise<BiometricEnrollResult> {
   try {
     const formData = new FormData();
@@ -319,7 +322,8 @@ export async function enrollFace(
     const response = await fetchWithRetry(`${PYTHON_API_URL}/v1/face/enroll`, {
       method: 'POST',
       body: formData,
-    });
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }, ENROLL_TIMEOUT_MS);
 
     const json = await response.json();
     console.log('[Biometrics] Face enroll HTTP status:', response.status);
@@ -361,7 +365,8 @@ export async function enrollFace(
 // ---------------------------------------------------------------------
 export async function enrollPalm(
   userId: string,
-  imageUri: string
+  imageUri: string,
+  token?: string,
 ): Promise<BiometricEnrollResult> {
   try {
     const formData = new FormData();
@@ -377,7 +382,8 @@ export async function enrollPalm(
     const response = await fetchWithRetry(`${PYTHON_API_URL}/v1/palm/enroll`, {
       method: 'POST',
       body: formData,
-    });
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }, ENROLL_TIMEOUT_MS);
 
     const json = await response.json();
     console.log('[Biometrics] Palm enroll HTTP status:', response.status);
@@ -424,7 +430,8 @@ export async function enrollPalm(
 // ---------------------------------------------------------------------
 export async function verifyFace(
   imageUri: string,
-  userId: string
+  userId: string,
+  token?: string,
 ): Promise<BiometricVerifyResult> {
   try {
     const formData = new FormData();
@@ -433,14 +440,14 @@ export async function verifyFace(
       name: 'face.jpg',
       type: 'image/jpeg',
     } as any);
-    formData.append('user_id', userId);
 
     console.log('[Biometrics] Sending face verify for user:', userId);
 
     const response = await fetchWithRetry(`${PYTHON_API_URL}/v1/face/verify`, {
       method: 'POST',
       body: formData,
-    });
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }, VERIFY_TIMEOUT_MS);
 
     console.log('[Biometrics] Face verify HTTP status:', response.status);
 
@@ -467,7 +474,8 @@ export async function verifyFace(
 // ---------------------------------------------------------------------
 export async function verifyPalm(
   imageUri: string,
-  userId: string
+  userId: string,
+  token?: string,
 ): Promise<BiometricVerifyResult> {
   try {
     const formData = new FormData();
@@ -476,14 +484,14 @@ export async function verifyPalm(
       name: 'palm.jpg',
       type: 'image/jpeg',
     } as any);
-    formData.append('user_id', userId);
 
     console.log('[Biometrics] Sending palm verify for user:', userId);
 
     const response = await fetchWithRetry(`${PYTHON_API_URL}/v1/palm/verify`, {
       method: 'POST',
       body: formData,
-    });
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    }, VERIFY_TIMEOUT_MS);
 
     console.log('[Biometrics] Palm verify HTTP status:', response.status);
 

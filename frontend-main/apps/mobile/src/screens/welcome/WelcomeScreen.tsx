@@ -1,5 +1,5 @@
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const introVisual = require('../../../assets/gif/Umojee_Intro_Visual.mp4');
@@ -10,6 +10,11 @@ type WelcomeScreenProps = {
 };
 
 export function WelcomeScreen({ canFinish, onFinish }: WelcomeScreenProps) {
+  const canFinishRef = useRef(canFinish);
+  const onFinishRef = useRef(onFinish);
+  canFinishRef.current = canFinish;
+  onFinishRef.current = onFinish;
+
   const player = useVideoPlayer(introVisual, (videoPlayer) => {
     videoPlayer.loop = false;
     videoPlayer.muted = true;
@@ -18,8 +23,8 @@ export function WelcomeScreen({ canFinish, onFinish }: WelcomeScreenProps) {
 
   useEffect(() => {
     const subscription = player.addListener('playToEnd', () => {
-      if (canFinish) {
-        onFinish();
+      if (canFinishRef.current) {
+        onFinishRef.current();
         return;
       }
 
@@ -29,8 +34,9 @@ export function WelcomeScreen({ canFinish, onFinish }: WelcomeScreenProps) {
 
     return () => {
       subscription.remove();
+      try { player.pause(); } catch { /* already released */ }
     };
-  }, [canFinish, onFinish, player]);
+  }, [player]);
 
   return (
     <View style={styles.screen}>

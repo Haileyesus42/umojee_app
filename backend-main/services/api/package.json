@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "dev": "tsc && NODE_OPTIONS='--max-old-space-size=512' nodemon --watch src --ext ts --exec 'tsc && node dist/server.js'",
     "build": "tsc",
     "export:db": "node ./scripts/exportMongoCollections.js",
     "import:db": "node ./scripts/importMongoCollections.js",

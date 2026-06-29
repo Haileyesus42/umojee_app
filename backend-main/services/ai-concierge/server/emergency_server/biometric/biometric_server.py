@@ -244,7 +244,7 @@ class BiometricServer:
                 raise HTTPException(404, detail="No palm template for this user")
             stored_features = json.loads(stored.template_data)
             similarity = self._cosine_similarity(query_result["features"], stored_features)
-            is_match = similarity >= 0.8
+            is_match = similarity >= 0.6
             return {
                 "is_match": bool(is_match),
                 "confidence": float(similarity),
@@ -333,9 +333,10 @@ async def verify_palms(
 # This endpoint handles file uploads (multipart) for palm verification
 @app.post("/v1/palm/verify-file")
 async def verify_palm_file(
-    user_id: str = Form(...),
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    current_user: UserModel = Depends(get_current_user),
 ):
+    user_id = str(current_user.id)
     return await biometric.verify_palm_for_user(user_id, file)
 
 @app.post("/v1/palm/enroll")

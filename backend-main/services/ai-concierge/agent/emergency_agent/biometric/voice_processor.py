@@ -16,25 +16,19 @@ class VoiceProcessor:
     """Voice processing functionality"""
     
     def extract_features(self, audio_data: bytes) -> Dict[str, Any]:
-        """Extract voice features from audio"""
-        try:
-            # Simulate voice feature extraction
-            # In a real implementation, this would use a voice recognition model
-            features_size = 192  # Typical size for voice features
-            features = [round(np.random.uniform(-1, 1), 6) for _ in range(features_size)]
-            
-            # Calculate quality score based on audio properties
-            quality_score = round(min(0.95, 0.7 + (np.var(features) * 0.1)), 2)
-            
-            return {
-                "features": features,
-                "quality_score": quality_score,
-                "voice_detected": True,
-                "message": "Voice features extracted successfully"
-            }
-        except Exception as e:
-            logger.error(f"Error extracting voice features: {str(e)}")
-            raise
+        """Extract voice features from audio.
+
+        Not yet implemented — a real voice recognition model is required.
+        Returns an error result rather than random data so callers can
+        surface a meaningful failure instead of silently accepting any audio.
+        """
+        logger.error("VoiceProcessor.extract_features is not implemented; voice biometric is unavailable")
+        return {
+            "features": [],
+            "quality_score": 0.0,
+            "voice_detected": False,
+            "message": "Voice biometric is not yet implemented"
+        }
     
     def verify_from_server(self, features1: str, features2: str) -> Dict[str, Any]:
         """Verify two voice feature sets match - called from server"""

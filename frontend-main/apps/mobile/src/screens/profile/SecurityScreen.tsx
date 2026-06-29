@@ -11,6 +11,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
@@ -19,7 +20,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import RightArrowIcon from '../../../assets/icons/right-arrow.svg';
-import SpeakIcon from '../../../assets/icons/whisper/speak-line-#002AFF.svg';
 import type { AuthUser } from '../../api/auth/auth';
 import { FooterWithMenu } from '../../components/navigation/FooterWithMenu';
 import { useProfileSecurity } from '../../hooks/profile/useProfileSecurity';
@@ -304,6 +304,22 @@ const compactStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+  profileSecuritySliderButton: {
+    backgroundColor: '#002AFF',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    height: 32,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+    marginLeft: 8,
+  },
+  profileSecuritySliderButtonEnrolled: {
+    backgroundColor: '#F0FDF4',
+    borderWidth: 1,
+    borderColor: '#16A34A',
+  },
   profileSecurityPasswordHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -463,27 +479,7 @@ type SecurityScreenProps = {
   palmEnrolled: boolean;
   onFaceEnrolled: (enrolled: boolean) => void;
   onPalmEnrolled: (enrolled: boolean) => void;
-  onDisableBiometric: () => void;
 };
-
-type ProfilePageLabel =
-  | 'Profile'
-  | 'Documents'
-  | 'Companions'
-  | 'Expenses'
-  | 'Whisper'
-  | 'Preferences'
-  | 'Security';
-
-const profilePages: { label: ProfilePageLabel; icon: typeof UserIcon }[] = [
-  { label: 'Profile', icon: UserIcon },
-  { label: 'Documents', icon: DocumentsIcon },
-  { label: 'Companions', icon: CompanionsIcon },
-  { label: 'Expenses', icon: ExpensesIcon },
-  { label: 'Whisper', icon: SpeakMenuIcon },
-  { label: 'Preferences', icon: SettingsIcon },
-  { label: 'Security', icon: LockIcon },
-];
 
 const passwordRequirements = [
   'At least 8 characters',
@@ -522,15 +518,15 @@ export function SecurityScreen({
   palmEnrolled,
   onFaceEnrolled,
   onPalmEnrolled,
-  onDisableBiometric,
 }: SecurityScreenProps) {
-  const [isPageMenuOpen, setIsPageMenuOpen] = useState(false);
   const [isPasswordManagementOpen, setIsPasswordManagementOpen] = useState(false);
   const [isDisableTwoFactorOpen, setIsDisableTwoFactorOpen] = useState(false);
   const [isTwoFactorModalOpen, setIsTwoFactorModalOpen] = useState(false);
   const [setupKeyCopied, setSetupKeyCopied] = useState(false);
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false); // ✅ NEW
   const dropdownTranslateY = useRef(new Animated.Value(330)).current;
+  const scrollViewRef = useRef<ScrollView>(null);
+  const biometricCardY = useRef(0);
 
   const biometricEnabled = faceEnrolled || palmEnrolled;
 
@@ -594,29 +590,13 @@ export function SecurityScreen({
     }
   }, [twoFactorSetup, setTwoFactorCode]);
 
-  const handlePagePress = (label: ProfilePageLabel) => {
-    setIsPageMenuOpen(false);
-    switch (label) {
-      case 'Profile':
-        onOpenProfile();
-        break;
-      case 'Documents':
-        onOpenDocuments();
-        break;
-      case 'Companions':
-        onOpenCompanions();
-        break;
-      case 'Expenses':
-        onOpenExpenses();
-        break;
-      case 'Preferences':
-        onOpenPreferences();
-        break;
-      case 'Whisper':
-        onOpenWhisper();
-        break;
+  useEffect(() => {
+    if (biometricEnabled && biometricCardY.current > 0) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({ y: biometricCardY.current - 16, animated: true });
+      }, 300);
     }
-  };
+  }, []);
 
   const handleCopySetupKey = async () => {
     const setupKey = twoFactorSetup?.manualEntryKey;
@@ -672,6 +652,7 @@ export function SecurityScreen({
   return (
     <SafeAreaView edges={['left', 'right']} style={styles.profileScreen}>
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={styles.profileScrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -814,7 +795,10 @@ export function SecurityScreen({
               </View>
 
               {/* Biometric Login Card */}
-              <View style={styles.profileSecurityBiometricCard}>
+              <View
+                onLayout={(e) => { biometricCardY.current = e.nativeEvent.layout.y; }}
+                style={styles.profileSecurityBiometricCard}
+              >
                 <View style={{ marginBottom: 16 }}>
                   <Text style={styles.profileSecurityEyebrow}>BIOMETRIC LOGIN</Text>
                   <Text style={styles.profileSecurityHeroTitle}>
@@ -866,18 +850,12 @@ export function SecurityScreen({
                       </Text>
                     </View>
                   </View>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={onOpenFaceEnrollment}
-                    style={({ pressed }) => [
-                      faceEnrolled
-                        ? styles.profileSecurityBiometricDangerButton
-                        : styles.profileSecurityBiometricButton,
-                      pressed && styles.pressedFeedback,
-                    ]}
-                  >
-                    <EditPencilIcon color={faceEnrolled ? '#16A34A' : '#FFFFFF'} />
-                  </Pressable>
+                  <Switch
+                    onValueChange={onOpenFaceEnrollment}
+                    thumbColor="#FFFFFF"
+                    trackColor={{ false: '#D1D5DB', true: '#002AFF' }}
+                    value={faceEnrolled}
+                  />
                 </View>
 
                 <View
@@ -907,36 +885,14 @@ export function SecurityScreen({
                       </Text>
                     </View>
                   </View>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={onOpenPalmEnrollment}
-                    style={({ pressed }) => [
-                      palmEnrolled
-                        ? styles.profileSecurityBiometricDangerButton
-                        : styles.profileSecurityBiometricButton,
-                      pressed && styles.pressedFeedback,
-                    ]}
-                  >
-                    <EditPencilIcon color={palmEnrolled ? '#16A34A' : '#FFFFFF'} />
-                  </Pressable>
+                  <Switch
+                    onValueChange={onOpenPalmEnrollment}
+                    thumbColor="#FFFFFF"
+                    trackColor={{ false: '#D1D5DB', true: '#002AFF' }}
+                    value={palmEnrolled}
+                  />
                 </View>
 
-                {biometricEnabled && (
-                  <View style={{ marginTop: 12 }}>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={onDisableBiometric}
-                      style={({ pressed }) => [
-                        styles.profileSecurityDangerButton,
-                        pressed && styles.pressedFeedback,
-                      ]}
-                    >
-                      <Text style={styles.profileSecurityDangerButtonText}>
-                        Disable Biometric Login
-                      </Text>
-                    </Pressable>
-                  </View>
-                )}
               </View>
 
               {/* Password Management */}
@@ -1092,43 +1048,6 @@ export function SecurityScreen({
         profileImageUri={profileImageUri}
         source="profileSecurity"
       />
-
-      {/* Page menu modal */}
-      <Modal
-        animationType="fade"
-        onRequestClose={() => setIsPageMenuOpen(false)}
-        transparent
-        visible={isPageMenuOpen}
-      >
-        <Pressable
-          accessibilityLabel="Close profile page menu"
-          onPress={() => setIsPageMenuOpen(false)}
-          style={styles.profileMenuOverlay}
-        >
-          <Pressable style={styles.profileMenuCard}>
-            <ScrollView
-              contentContainerStyle={styles.profileMenuScrollContent}
-              showsVerticalScrollIndicator={false}
-            >
-              {profilePages.map(({ label, icon: Icon }, index) => (
-                <Pressable
-                  accessibilityRole="button"
-                  key={label}
-                  onPress={() => handlePagePress(label)}
-                  style={({ pressed }) => [
-                    styles.profileMenuItem,
-                    index > 0 && styles.profileMenuItemDivider,
-                    pressed && styles.pressedFeedback,
-                  ]}
-                >
-                  <Icon color="#002AFF" size={20} />
-                  <Text style={styles.profileMenuItemText}>{label}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
 
       {/* ✅ MOBILE-OPTIMIZED 2FA SETUP MODAL */}
       <Modal
@@ -1456,51 +1375,6 @@ function ChevronDownIcon({
   );
 }
 
-function CompanionsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Circle cx={8} cy={8} r={2.5} stroke={color} strokeWidth={1.8} />
-      <Circle cx={16} cy={8} r={2.5} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M4 20c.5-3 1.8-4.5 4-4.5s3.5 1.5 4 4.5M12 20c.5-3 1.8-4.5 4-4.5s3.5 1.5 4 4.5"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function DocumentsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M6 4h12v16H6V4Z" stroke={color} strokeLinejoin="round" strokeWidth={1.9} />
-      <Path d="M9 9h6M9 13h6M9 17h3" stroke={color} strokeLinecap="round" strokeWidth={1.9} />
-    </Svg>
-  );
-}
-
-function ExpensesIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M5 4v15h15"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-      <Path
-        d="m8 15 3.2-4 3 2.2L18 8"
-        stroke={color}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.9}
-      />
-    </Svg>
-  );
-}
-
 function EyeIcon() {
   return (
     <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
@@ -1550,16 +1424,6 @@ function KeyIcon({ color = '#FFFFFF' }: { color?: string }) {
   );
 }
 
-function LockIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Rect x={5} y={10} width={14} height={10} rx={2} stroke={color} strokeWidth={1.8} />
-      <Path d="M8 10V7a4 4 0 0 1 8 0v3" stroke={color} strokeWidth={1.8} />
-      <Path d="M12 14v2" stroke={color} strokeLinecap="round" strokeWidth={1.8} />
-    </Svg>
-  );
-}
-
 function PalmIdIcon() {
   return (
     <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
@@ -1596,24 +1460,6 @@ function ScanIcon() {
   );
 }
 
-function SettingsIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Z" stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8 8 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8 8 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5L7 18a8 8 0 0 0 2.6 1.5L10 22h4l.4-2.5A8 8 0 0 0 17 18l2.4 1 2-3.5-2-1.5Z"
-        stroke={color}
-        strokeLinejoin="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}
-
-function SpeakMenuIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return <SpeakIcon color={color} height={size} width={size} />;
-}
-
 function ShieldIcon() {
   return (
     <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
@@ -1627,37 +1473,4 @@ function ShieldIcon() {
   );
 }
 
-function EditPencilIcon({ color = '#FFFFFF' }: { color?: string }) {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-        stroke={color}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"
-        stroke={color}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
 
-function UserIcon({ color = '#0A0A0A', size }: { color?: string; size: number }) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Circle cx={12} cy={8} r={4} stroke={color} strokeWidth={1.8} />
-      <Path
-        d="M5 21c.9-4 3.2-6 7-6s6.1 2 7 6"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.8}
-      />
-    </Svg>
-  );
-}

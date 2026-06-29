@@ -19,8 +19,10 @@ class Settings:
     TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
     TWILIO_MESSAGING_SERVICE_SID = os.getenv("TWILIO_MESSAGING_SERVICE_SID")
     
-    # JWT Configuration
-    JWT_SECRET = os.getenv("JWT_SECRET", "default_secret")
+    # JWT Configuration — must be set in the environment; no insecure fallback
+    JWT_SECRET = os.getenv("JWT_SECRET")
+    if not JWT_SECRET:
+        raise RuntimeError("JWT_SECRET environment variable is required but not set")
     
     # Database Configuration
     USER_DB_URL = os.getenv("USER_DB_URL", os.getenv("DATABASE_URL", "postgresql+asyncpg://face_user:Dingle100%25143@localhost/face_recognition"))

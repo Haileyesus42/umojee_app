@@ -264,17 +264,27 @@ export const BeginTwoFactorSetup = async (
       return res.status(404).json({ status: 'fail', message: 'User not found' });
     }
 
-    const plainSecret = generateTwoFactorSecret();
+    const existingTempSecret = user.twoFactorTempSecret
+      ? decryptTwoFactorSecret(user.twoFactorTempSecret)
+      : null;
+    const plainSecret = existingTempSecret ?? generateTwoFactorSecret();
     const otpauthUrl = generateOtpAuthUrl(user.email, plainSecret);
     const qrCodeDataUrl = await generateQrCodeDataUrl(otpauthUrl);
 
-    user.twoFactorTempSecret = encryptTwoFactorSecret(plainSecret);
-    await user.save({ validateBeforeSave: false });
+    if (!existingTempSecret) {
+      user.twoFactorTempSecret = encryptTwoFactorSecret(plainSecret);
+      await user.save({ validateBeforeSave: false });
+    }
 
     return res.status(200).json({
       status: 'success',
       message: 'Two-factor setup initialized',
-      data: sanitizeClientUserResponse(user),
+      data: {
+        ...sanitizeClientUserResponse(user),
+        qrCodeDataUrl,
+        otpauthUrl,
+        manualEntryKey: plainSecret,
+      },
     });
   } catch (error: any) {
     return res.status(500).json({ status: 'fail', message: error.message });

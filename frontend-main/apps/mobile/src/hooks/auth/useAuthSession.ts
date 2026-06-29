@@ -398,8 +398,11 @@ export function useAuthSession() {
     try {
       const NODE_API_URL =
         process.env.EXPO_PUBLIC_NODE_BACKEND_URL ||
-        process.env.EXPO_PUBLIC_BACKEND_URL ||
-        'http://192.168.8.86:3001';
+        process.env.EXPO_PUBLIC_BACKEND_URL;
+
+      if (!NODE_API_URL) {
+        return null;
+      }
 
       const response = await fetch(`${NODE_API_URL}/api/client/user/getMe`, {
         method: 'GET',
@@ -410,7 +413,7 @@ export function useAuthSession() {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to refresh user: ${response.status}`);
+        return null;
       }
 
       const json = await response.json();
@@ -424,8 +427,8 @@ export function useAuthSession() {
       }
 
       return null;
-    } catch (error) {
-      console.error('[Auth] refreshUser failed:', error);
+    } catch {
+      // Network unavailable — keep the cached session as-is
       return null;
     }
   }, [session, persistSession]);

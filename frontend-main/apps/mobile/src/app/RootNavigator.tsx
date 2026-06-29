@@ -416,6 +416,26 @@ export function RootNavigator({
     />
   );
 
+  const globalMenuOverlay = (
+    <MenuOverlay
+      visible={menuVisible}
+      onClose={() => setMenuVisible(false)}
+      onOpenHome={() => { setMenuVisible(false); navigate('home'); }}
+      onOpenChat={() => { setMenuVisible(false); openChat(); }}
+      onOpenProfile={() => { setMenuVisible(false); navigateToProfile(activeScreen); }}
+      onOpenWallet={() => { setMenuVisible(false); navigate('walletFaceRecognition'); }}
+      onOpenJourneys={() => { setMenuVisible(false); navigate('journeys'); }}
+      onOpenTravelSupport={() => { setMenuVisible(false); navigate('flow'); }}
+      onOpenNotifications={() => { setMenuVisible(false); navigate('notifications'); }}
+      onLogout={handleLogout}
+      profileImageUri={profileImageUri}
+      userEmail={userEmail}
+      userHandle={userHandle}
+      userName={userName}
+      notificationUnreadCount={notificationUnreadCount}
+    />
+  );
+
   if (activeScreen === 'chat') {
     return (
       <AIChatScreen
@@ -680,9 +700,7 @@ export function RootNavigator({
       <>
         <ProfileScreen
           notificationUnreadCount={notificationUnreadCount}
-          onBack={() => {
-            setMenuVisible(true);
-          }}
+          onBack={() => setMenuVisible(true)}
           onLogout={handleLogout}
           onOpenChat={() => openChat()}
           onOpenCompanions={() => navigate('profileCompanions')}
@@ -701,6 +719,7 @@ export function RootNavigator({
           user={authSession.user}
           onUserUpdate={authSession.updateUser}
         />
+        {globalMenuOverlay}
         {assistantOverlay}
       </>
     );
@@ -716,10 +735,7 @@ export function RootNavigator({
         <>
           <ProfileScreen
             notificationUnreadCount={notificationUnreadCount}
-            onBack={() => {
-              setMenuVisible(true);
-              navigate('home');
-            }}
+            onBack={() => setMenuVisible(true)}
             onLogout={handleLogout}
             onOpenChat={() => openChat()}
             onOpenCompanions={() => navigate('profileCompanions')}
@@ -738,6 +754,7 @@ export function RootNavigator({
             user={authSession.user}
             onUserUpdate={authSession.updateUser}
           />
+          {globalMenuOverlay}
           {assistantOverlay}
         </>
       );
@@ -747,6 +764,7 @@ export function RootNavigator({
       <BiometricGatekeeper
         isBiometricEnabled={biometricState.isBiometricEnabled}
         userId={userId}
+        token={authSession.token ?? undefined}
         biometricState={biometricState}
         notificationUnreadCount={notificationUnreadCount}
         onOpenChat={() => openChat()}
@@ -758,9 +776,7 @@ export function RootNavigator({
       >
         <ProfileScreen
           notificationUnreadCount={notificationUnreadCount}
-          onBack={() => {
-            setMenuVisible(true);
-          }}
+          onBack={() => setMenuVisible(true)}
           onLogout={handleLogout}
           onOpenChat={() => openChat()}
           onOpenCompanions={() => navigate('profileCompanions')}
@@ -779,6 +795,7 @@ export function RootNavigator({
           user={authSession.user}
           onUserUpdate={authSession.updateUser}
         />
+        {globalMenuOverlay}
         {assistantOverlay}
       </BiometricGatekeeper>
     );
@@ -819,6 +836,7 @@ export function RootNavigator({
       <BiometricGatekeeper
         isBiometricEnabled={biometricState.isBiometricEnabled}
         userId={userId}
+        token={authSession.token ?? undefined}
         biometricState={biometricState}
         notificationUnreadCount={notificationUnreadCount}
         onOpenChat={() => openChat()}
@@ -1049,7 +1067,6 @@ export function RootNavigator({
           palmEnrolled={biometricState.palmEnrolled}
           onFaceEnrolled={biometricState.setFaceEnrolled}
           onPalmEnrolled={biometricState.setPalmEnrolled}
-          onDisableBiometric={biometricState.disableBiometric}
         />
         {assistantOverlay}
       </>
@@ -1097,6 +1114,7 @@ export function RootNavigator({
       <BiometricEnrollmentScreen
         mode={enrollmentMode}
         userId={userId}
+        token={authSession.token ?? undefined}
         notificationUnreadCount={notificationUnreadCount}
         onBack={() => navigate('profileSecurity')}
         onEnrolled={() => {
@@ -1209,6 +1227,7 @@ export function RootNavigator({
         <FaceRecognitionScreen
           userName=""
           userId={biometricLoginUserId}
+          token={authSession.token ?? undefined}
           hasPalm={false}
           onBack={() => navigate('login')}
           onVerified={async () => {

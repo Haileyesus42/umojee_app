@@ -7,11 +7,6 @@ const BIOMETRIC_SESSION_KEY = 'umojee.biometric_session.v3';
 const BIOMETRIC_ENROLLMENT_KEY = 'umojee.biometric_enrollment.v1'; // ✅ NEW
 const DEFAULT_SESSION_DURATION_MS = 30 * 1000; // 30 minutes
 
-type BiometricSessionData = {
-  verifiedAt: number;
-  duration: number;
-};
-
 type BiometricEnrollmentData = {
   faceEnrolled: boolean;
   palmEnrolled: boolean;
@@ -93,16 +88,16 @@ export function useBiometricState(): UseBiometricStateReturn {
   const checkVerification = useCallback((): boolean => {
     if (verifiedAt === null) return false;
     const elapsed = Date.now() - verifiedAt;
-    return elapsed < DEFAULT_SESSION_DURATION_MS;
-  }, [verifiedAt]);
+    return elapsed < sessionDuration;
+  }, [verifiedAt, sessionDuration]);
 
   const isVerified = checkVerification();
 
   const getRemainingTime = useCallback((): number => {
     if (verifiedAt === null) return 0;
-    const remaining = DEFAULT_SESSION_DURATION_MS - (Date.now() - verifiedAt);
+    const remaining = sessionDuration - (Date.now() - verifiedAt);
     return Math.max(0, remaining);
-  }, [verifiedAt]);
+  }, [verifiedAt, sessionDuration]);
 
   const setVerified = useCallback(async (durationMs: number = DEFAULT_SESSION_DURATION_MS) => {
     const now = Date.now();

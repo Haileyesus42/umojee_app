@@ -6,8 +6,29 @@ declare class VolumeSOSServiceModule extends NativeModule {
   resetCooldown(): void;
   registerSOSListener(): void;
   unregisterSOSListener(): void;
+  saveToken(token: string): void;
   addListener(eventName: 'onSOSTriggered', listener: (event: { triggered: boolean }) => void): any;
   removeAllListeners(eventName: string): void;
 }
 
-export default requireNativeModule<VolumeSOSServiceModule>('VolumeSOSService');
+const noop = () => {};
+const stub: VolumeSOSServiceModule = {
+  startService: noop,
+  stopService: noop,
+  resetCooldown: noop,
+  registerSOSListener: noop,
+  unregisterSOSListener: noop,
+  saveToken: noop,
+  addListener: () => ({ remove: noop }),
+  removeAllListeners: noop,
+} as unknown as VolumeSOSServiceModule;
+
+let module: VolumeSOSServiceModule;
+try {
+  module = requireNativeModule<VolumeSOSServiceModule>('VolumeSOSService');
+} catch {
+  console.warn('[VolumeSOSService] Native module not available — running in stub mode');
+  module = stub;
+}
+
+export default module;
