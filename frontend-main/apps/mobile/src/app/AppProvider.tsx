@@ -304,6 +304,8 @@ export function AppProvider() {
   const authSession = useAuthSession();
   const biometricState = useBiometricState();
 
+  const [whisperActive, setWhisperActive] = useState(false);
+
   useVolumeSOSTrigger(async () => {
     const token = authSession.token;
     if (!token) {
@@ -314,6 +316,7 @@ export function AppProvider() {
       console.log('[VolumeSOSTrigger] 🚨 SOS triggered via volume button!');
       await triggerEmergencyWebhook(token, 'sos');
       console.log('[VolumeSOSTrigger] ✅ SOS webhook sent successfully');
+      setWhisperActive(true);
     } catch (error) {
       console.error('[VolumeSOSTrigger] ❌ SOS webhook failed:', error);
     }
@@ -988,6 +991,8 @@ export function AppProvider() {
           weather={weather}
           weatherFallbackEnabled={isWeatherFallback}
           weatherMode={weatherMode}
+          whisperActive={whisperActive}
+          onWhisperActiveChange={setWhisperActive}
         />
       </AppWhiteBackground>
     </SafeAreaProvider>

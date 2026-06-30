@@ -131,7 +131,7 @@ const compactStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 16,
-    marginTop: 72,
+    marginTop: 4,
     marginBottom: 16,
     shadowOpacity: 0.05,
     elevation: 1,
@@ -143,7 +143,7 @@ const compactStyles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 0,
-    paddingTop: 0,
+    paddingTop: 60,
     paddingBottom: 20,
   },
 
@@ -151,7 +151,7 @@ const compactStyles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 0,
-    paddingTop: 0,
+    paddingTop: 60,
     paddingBottom: 20,
   },
 
@@ -313,12 +313,15 @@ const compactStyles = StyleSheet.create({
   },
 
   // ---------- Companions-specific ----------
+  profileCompanionAvatarRow: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+
   profileCompanionPictureGroup: {
     position: 'relative',
-    width: 84,
-    height: 84,
-    marginBottom: 24,
-    alignSelf: 'center',
+    alignItems: 'center',
     overflow: 'visible',
   },
 
@@ -326,14 +329,14 @@ const compactStyles = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: 42,
-    overflow: 'visible',
+    overflow: 'hidden',
   },
 
   profilePictureButtons: {
     position: 'absolute',
-    left: 40,
-    top: 58,
-    flexDirection: 'row',
+    right: -14,
+    top: 10,
+    flexDirection: 'column',
     gap: 8,
   },
 
@@ -420,10 +423,10 @@ const compactStyles = StyleSheet.create({
   },
 
   profileCompanionTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     color: '#1A1A1A',
-    marginBottom: 8,
+    textAlign: 'center',
   },
 
   // ---------- Shared inline heading ----------
@@ -1148,6 +1151,13 @@ export function CompanionsScreen({
             <View style={styles.profileCompanionForm}>
               {loading ? <ActivityIndicator color="#002AFF" /> : null}
 
+              <View style={styles.profileInlineHeading}>
+                {draft.type === 'pet' ? <PetIcon /> : <UserSmileIcon />}
+                <Text style={styles.profileInlineHeadingText}>
+                  {draft.type === 'pet' ? 'Pet Information' : 'Profile Information'}
+                </Text>
+              </View>
+
               {companions.length ? (
                 <ScrollView
                   horizontal
@@ -1186,58 +1196,52 @@ export function CompanionsScreen({
                 </ScrollView>
               ) : null}
 
-              <Text style={styles.profileCompanionTitle}>{title}</Text>
-
-              <View style={styles.profileInlineHeading}>
-                {draft.type === 'pet' ? <PetIcon /> : <UserSmileIcon />}
-                <Text style={styles.profileInlineHeadingText}>
-                  {draft.type === 'pet' ? 'Pet Information' : 'Profile Information'}
-                </Text>
-              </View>
-
-              <View style={styles.profileCompanionPictureGroup}>
-                <Pressable
-                  accessibilityLabel="View companion picture"
-                  accessibilityRole="imagebutton"
-                  onPress={() => {
-                    setPhotoPreviewZoom(1);
-                    setPhotoPreviewOffset({ x: 0, y: 0 });
-                    setIsPhotoPreviewOpen(true);
-                  }}
-                >
-                  <Image
-                    onError={() => setPhotoLoadFailed(true)}
-                    source={companionImageSource}
-                    style={styles.profileAvatar}
-                  />
-                </Pressable>
-                <View style={styles.profilePictureButtons}>
+              <View style={styles.profileCompanionAvatarRow}>
+                <View style={styles.profileCompanionPictureGroup}>
                   <Pressable
-                    accessibilityLabel="Choose companion picture from phone"
-                    accessibilityRole="button"
-                    disabled={uploadingPhoto}
-                    onPress={handleChooseCompanionPhoto}
-                    style={({ pressed }) => [
-                      styles.profilePictureButton,
-                      uploadingPhoto && styles.profilePictureButtonDisabled,
-                      pressed && styles.pressedFeedback,
-                    ]}
+                    accessibilityLabel="View companion picture"
+                    accessibilityRole="imagebutton"
+                    onPress={() => {
+                      setPhotoPreviewZoom(1);
+                      setPhotoPreviewOffset({ x: 0, y: 0 });
+                      setIsPhotoPreviewOpen(true);
+                    }}
                   >
-                    <GalleryIcon />
+                    <Image
+                      onError={() => setPhotoLoadFailed(true)}
+                      source={companionImageSource}
+                      style={styles.profileAvatar}
+                    />
                   </Pressable>
-                  <Pressable
-                    accessibilityLabel="Take companion picture"
-                    accessibilityRole="button"
-                    disabled={uploadingPhoto}
-                    onPress={handleTakeCompanionPhoto}
-                    style={({ pressed }) => [
-                      styles.profilePictureButton,
-                      uploadingPhoto && styles.profilePictureButtonDisabled,
-                      pressed && styles.pressedFeedback,
-                    ]}
-                  >
-                    <CameraIcon />
-                  </Pressable>
+                  <View style={styles.profilePictureButtons}>
+                    <Pressable
+                      accessibilityLabel="Choose companion picture from phone"
+                      accessibilityRole="button"
+                      disabled={uploadingPhoto}
+                      onPress={handleChooseCompanionPhoto}
+                      style={({ pressed }) => [
+                        styles.profilePictureButton,
+                        uploadingPhoto && styles.profilePictureButtonDisabled,
+                        pressed && styles.pressedFeedback,
+                      ]}
+                    >
+                      <GalleryIcon />
+                    </Pressable>
+                    <Pressable
+                      accessibilityLabel="Take companion picture"
+                      accessibilityRole="button"
+                      disabled={uploadingPhoto}
+                      onPress={handleTakeCompanionPhoto}
+                      style={({ pressed }) => [
+                        styles.profilePictureButton,
+                        uploadingPhoto && styles.profilePictureButtonDisabled,
+                        pressed && styles.pressedFeedback,
+                      ]}
+                    >
+                      <CameraIcon />
+                    </Pressable>
+                  </View>
+                  <Text style={styles.profileCompanionTitle}>{title}</Text>
                 </View>
               </View>
 

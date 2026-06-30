@@ -28,30 +28,12 @@ const compactStyles = StyleSheet.create({
     paddingBottom: 80,
   },
 
-  profileHero: {
-    paddingTop: 40,
-    paddingBottom: 12,
-    alignItems: 'center',
-  },
-
-  profilePageToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    alignSelf: 'center',
-    gap: 8,
-    marginTop: 4,
-  },
-
   // ----- Document‑specific overrides -----
   profileDocumentsMain: {
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 0,
-    paddingTop: 0,
+    paddingTop: 65,
     paddingBottom: 20,
   },
 
@@ -65,7 +47,7 @@ const compactStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginLeft: 72,
-    marginBottom: 24,
+    marginBottom: 4,
     flexShrink: 0,
   },
 
@@ -75,7 +57,7 @@ const compactStyles = StyleSheet.create({
     backgroundColor: '#F0FDF4',
     borderRadius: 8,
     padding: 12,
-    marginTop: 48,
+    marginTop: 12,
     marginBottom: 24,
     gap: 12,
     flexShrink: 0,
@@ -85,7 +67,6 @@ const compactStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 16,
-    marginBottom: 16,
     shadowOpacity: 0.05,
     elevation: 1,
     flexShrink: 0,

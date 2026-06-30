@@ -16,6 +16,8 @@ type WelcomeSummaryProps = {
   weather: WeatherData | null;
   weatherFallbackEnabled: boolean;
   weatherMode: WeatherMode;
+  whisperActive?: boolean;
+  onWhisperActiveChange?: (active: boolean) => void;
 };
 
 const weatherModes: WeatherMode[] = [
@@ -88,10 +90,66 @@ export function WelcomeSummary({
   weather,
   weatherFallbackEnabled,
   weatherMode,
+  whisperActive,
+  onWhisperActiveChange,
 }: WelcomeSummaryProps) {
   const lastWeatherPress = useRef(0);
   const [profileImageLoadFailed, setProfileImageLoadFailed] = useState(false);
-  const [whisperEnabled, setWhisperEnabled] = useState(false);
+  const [whisperEnabledLocal, setWhisperEnabledLocal] = useState(false);
+  const whisperEnabled = whisperActive ?? whisperEnabledLocal;
+  const setWhisperEnabled = (val: boolean) => {
+    setWhisperEnabledLocal(val);
+    onWhisperActiveChange?.(val);
+  };
+  const SESSION_DURATION = 30;
+  const dismissTapCount = useRef(0);
+  const dismissTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [sessionSecondsLeft, setSessionSecondsLeft] = useState(SESSION_DURATION);
+  const sessionIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (whisperEnabled) {
+      setSessionSecondsLeft(SESSION_DURATION);
+      sessionIntervalRef.current = setInterval(() => {
+        setSessionSecondsLeft((s) => {
+          if (s <= 1) {
+            clearInterval(sessionIntervalRef.current!);
+            sessionIntervalRef.current = null;
+            setWhisperEnabled(false);
+            return SESSION_DURATION;
+          }
+          return s - 1;
+        });
+      }, 1000);
+    } else {
+      if (sessionIntervalRef.current) {
+        clearInterval(sessionIntervalRef.current);
+        sessionIntervalRef.current = null;
+      }
+      setSessionSecondsLeft(SESSION_DURATION);
+    }
+    return () => {
+      if (sessionIntervalRef.current) clearInterval(sessionIntervalRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [whisperEnabled]);
+
+  const handleDismissTap = () => {
+    dismissTapCount.current += 1;
+    if (dismissTapCount.current >= 5) {
+      dismissTapCount.current = 0;
+      if (dismissTapTimer.current) clearTimeout(dismissTapTimer.current);
+      dismissTapTimer.current = null;
+      setWhisperEnabled(false);
+      return;
+    }
+    if (dismissTapCount.current === 1) {
+      dismissTapTimer.current = setTimeout(() => {
+        dismissTapCount.current = 0;
+        dismissTapTimer.current = null;
+      }, 10000);
+    }
+  };
   const [now, setNow] = useState(() => new Date());
   const isDarkWeather =
     weatherMode === 'cloudy' || weatherMode === 'rainy' || weatherMode === 'stormy';
@@ -184,14 +242,19 @@ export function WelcomeSummary({
         transparent
         visible={whisperEnabled}
       >
-        <View style={localStyles.lockedScreen}>
-          <Pressable
-            accessibilityLabel="Turn Whisper off"
-            accessibilityRole="button"
-            onPress={() => setWhisperEnabled(false)}
-            style={localStyles.lockedScreenDismiss}
-          />
-        </View>
+        <Pressable
+          accessibilityLabel="Turn Whisper off"
+          accessibilityRole="button"
+          onPress={handleDismissTap}
+          style={localStyles.lockedScreen}
+        >
+          <View style={localStyles.lockedScreenHint}>
+            <Text style={localStyles.lockedScreenHintText}>Tap 5 times to exit Whisper mode</Text>
+            <Text style={localStyles.lockedScreenCountdown}>
+              {sessionSecondsLeft}s
+            </Text>
+          </View>
+        </Pressable>
       </Modal>
 
       <View style={styles.welcomeDashboardShadow}>
@@ -330,13 +393,26 @@ const localStyles = StyleSheet.create({
   lockedScreen: {
     backgroundColor: '#000000',
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 60,
   },
-  lockedScreenDismiss: {
-    bottom: 0,
-    height: 112,
-    position: 'absolute',
-    right: 0,
-    width: 112,
+  lockedScreenHint: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  lockedScreenHintText: {
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  lockedScreenCountdown: {
+    color: 'rgba(255,255,255,0.3)',
+    fontSize: 11,
+    textAlign: 'center',
+    marginTop: 4,
   },
   whisperControl: {
     alignItems: 'center',

@@ -229,6 +229,8 @@ const compactStyles = StyleSheet.create({
     fontSize: 15,
     backgroundColor: '#FFFFFF',
   },
+
+  // Dialog overlay / card – consistent with WisperScreen
 });
 
 const styles = { ...themeStyles, ...compactStyles };

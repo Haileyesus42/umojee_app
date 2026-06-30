@@ -54,6 +54,8 @@ type HomeScreenProps = {
   // ✅ NEW: Controlled menu state (lifted from ScreenFrame)
   menuVisible?: boolean;
   onMenuVisibleChange?: (visible: boolean) => void;
+  whisperActive?: boolean;
+  onWhisperActiveChange?: (active: boolean) => void;
 };
 
 export function HomeScreen({
@@ -88,6 +90,8 @@ export function HomeScreen({
   weatherMode,
   menuVisible,
   onMenuVisibleChange,
+  whisperActive,
+  onWhisperActiveChange,
 }: HomeScreenProps) {
   const hasRequestedWeather = useRef(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -143,6 +147,8 @@ export function HomeScreen({
         weather={weather}
         weatherFallbackEnabled={weatherFallbackEnabled}
         weatherMode={weatherMode}
+        whisperActive={whisperActive}
+        onWhisperActiveChange={onWhisperActiveChange}
       />
       {/* <View style={styles.planWithUnitySection}>
         <Text style={styles.planWithUnityHeading}>Smart Mobility, powered by AI</Text>

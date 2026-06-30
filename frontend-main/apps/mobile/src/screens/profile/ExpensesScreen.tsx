@@ -64,27 +64,6 @@ const compactStyles = StyleSheet.create({
   },
 
 
-  // ---------- Form card (used in Documents, Companions, Expenses) ----------
-  profileDocumentsForm: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    shadowOpacity: 0.05,
-    elevation: 1,
-    flexShrink: 0,
-  },
-
-  profileCompanionForm: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    shadowOpacity: 0.05,
-    elevation: 1,
-    flexShrink: 0,
-  },
-
   // ---------- Main containers ----------
   profileDocumentsMain: {
     flexDirection: 'column',
@@ -106,8 +85,8 @@ const compactStyles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 0,
-    paddingTop: 0,
-    paddingBottom: 20,
+    paddingTop: 60,
+    paddingBottom: 2,
   },
 
     // Section heading
@@ -116,7 +95,7 @@ const compactStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginLeft: 72,
-    marginBottom: 24,
+    marginBottom: 0,
     flexShrink: 0,
   },
 
@@ -136,7 +115,7 @@ const compactStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 16,
-    marginTop: 72,
+    marginTop: 20,
     marginBottom: 16,
     shadowOpacity: 0.05,
     elevation: 1,

@@ -44,7 +44,7 @@ const compactStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginLeft: 72,
-    marginBottom: 24,
+    marginBottom: 4,
     flexShrink: 0,
   },
   profileSectionTitle: {
@@ -60,7 +60,7 @@ const compactStyles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 0,
-    paddingTop: 0,
+    paddingTop: 60,
     paddingBottom: 20,
   },
 

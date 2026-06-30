@@ -83,8 +83,8 @@ const compactStyles = StyleSheet.create({
   },
   profilePrimaryButton: {
     backgroundColor: '#002AFF',
-    borderRadius: 12,
-    paddingVertical: 12,
+    borderRadius: 6,
+    paddingVertical: 8,
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -92,7 +92,7 @@ const compactStyles = StyleSheet.create({
   profilePrimaryButtonText: {
     color: '#FFFFFF',
     fontWeight: '600',
-    fontSize: 15,
+    fontSize: 13,
   },
   profilePrimaryButtonDisabled: {
     opacity: 0.5,
@@ -171,8 +171,8 @@ const compactStyles = StyleSheet.create({
   },
   profileSecurityBlackButton: {
     backgroundColor: '#1A1A1A',
-    borderRadius: 8,
-    paddingVertical: 12,
+    borderRadius: 6,
+    paddingVertical: 8,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -183,19 +183,19 @@ const compactStyles = StyleSheet.create({
   profileSecurityBlackButtonText: {
     color: '#FFFFFF',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 13,
   },
   profileSecurityDangerButton: {
     backgroundColor: '#F3F4F6',
-    borderRadius: 8,
-    paddingVertical: 10,
+    borderRadius: 6,
+    paddingVertical: 8,
     paddingHorizontal: 16,
     alignItems: 'center',
   },
   profileSecurityDangerButtonText: {
     color: '#1A1A1A',
     fontWeight: '500',
-    fontSize: 14,
+    fontSize: 13,
   },
   profileSecurityTwoFactorCodeField: {
     marginTop: 8,
@@ -206,13 +206,13 @@ const compactStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    height: 44,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
   },
   profileSecurityCodeInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 13,
     color: '#1A1A1A',
   },
   profileSecurityCodeHelperText: {
@@ -365,11 +365,13 @@ const compactStyles = StyleSheet.create({
   },
   profileSecurityPasswordField: {
     gap: 4,
+    marginBottom: 10,
   },
   profileSecurityPasswordLabel: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '500',
     color: '#374151',
+    marginBottom: 4,
   },
   profileSecurityPasswordInput: {
     flexDirection: 'row',
@@ -377,13 +379,13 @@ const compactStyles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    height: 44,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
   },
   profileSecurityPasswordPlaceholder: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     color: '#1A1A1A',
   },
   profileSecurityRequirements: {
@@ -444,6 +446,19 @@ const compactStyles = StyleSheet.create({
     fontSize: 13,
     color: '#00A67E',
     textAlign: 'center',
+  },
+
+  // Dialog overlay / card – consistent with WisperScreen
+  profileTwoFactorCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    overflow: 'hidden',
   },
 });
 
@@ -1063,20 +1078,14 @@ export function SecurityScreen({
         >
           <Pressable
             onPress={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: 20,
-              maxHeight: '85%',
-              width: 330,
-              overflow: 'hidden',
-            }}
+            style={styles.profileTwoFactorCard}
           >
             {/* Header */}
             <LinearGradient
               colors={['#002AFF', '#77F2F6']}
               end={{ x: 1, y: 1 }}
               start={{ x: 0, y: 0 }}
-              style={{ paddingHorizontal: 16, paddingVertical: 14 }}
+              style={{ paddingHorizontal: 14, paddingVertical: 10 }}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                 <ShieldIcon />
@@ -1084,9 +1093,9 @@ export function SecurityScreen({
                   <Text
                     style={{
                       color: '#FFFFFF',
-                      fontSize: 16,
-                      fontWeight: '700',
-                      lineHeight: 22,
+                      fontSize: 14,
+                      fontWeight: '600',
+                      lineHeight: 20,
                     }}
                   >
                     Set up authenticator
@@ -1107,7 +1116,7 @@ export function SecurityScreen({
 
             {/* Content */}
             <ScrollView
-              contentContainerStyle={{ padding: 14, gap: 12 }}
+              contentContainerStyle={{ padding: 14, gap: 10 }}
               showsVerticalScrollIndicator={false}
             >
 
@@ -1121,8 +1130,8 @@ export function SecurityScreen({
                   style={({ pressed }) => [
                     {
                       backgroundColor: '#002AFF',
-                      borderRadius: 12,
-                      paddingVertical: 14,
+                      borderRadius: 6,
+                      paddingVertical: 8,
                       paddingHorizontal: 16,
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -1133,7 +1142,7 @@ export function SecurityScreen({
                   ]}
                 >
                   <PhoneIcon />
-                  <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '600' }}>
+                  <Text style={{ color: '#FFFFFF', fontSize: 13, fontWeight: '600' }}>
                     Open authenticator app
                   </Text>
                 </Pressable>
@@ -1231,9 +1240,9 @@ export function SecurityScreen({
                     backgroundColor: '#FFFFFF',
                     borderWidth: 1,
                     borderColor: twoFactorCode.length === 6 ? '#16A34A' : '#D1D5DB',
-                    borderRadius: 8,
+                    borderRadius: 6,
                     paddingHorizontal: 10,
-                    height: 48,
+                    paddingVertical: 7,
                   }}
                 >
                   <TextInput
@@ -1264,8 +1273,8 @@ export function SecurityScreen({
                 style={({ pressed }) => [
                   {
                     backgroundColor: '#1A1A1A',
-                    borderRadius: 8,
-                    paddingVertical: 12,
+                    borderRadius: 6,
+                    paddingVertical: 8,
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'row',
@@ -1276,7 +1285,7 @@ export function SecurityScreen({
                 ]}
               >
                 <ScanIcon />
-                <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '600' }}>
+                <Text style={{ color: '#FFFFFF', fontSize: 13, fontWeight: '600' }}>
                   {twoFactorConfirmLoading ? 'Verifying...' : 'Verify & Enable'}
                 </Text>
               </Pressable>

@@ -109,6 +109,8 @@ type RootNavigatorProps = {
   weather: WeatherData | null;
   weatherFallbackEnabled: boolean;
   weatherMode: WeatherMode;
+  whisperActive?: boolean;
+  onWhisperActiveChange?: (active: boolean) => void;
 };
 
 export function RootNavigator({
@@ -131,6 +133,8 @@ export function RootNavigator({
   weather,
   weatherFallbackEnabled,
   weatherMode,
+  whisperActive,
+  onWhisperActiveChange,
 }: RootNavigatorProps) {
   const [activeScreen, setActiveScreen] = useState<RootRouteName>('welcome');
   const [aiChatLaunchParams, setAiChatLaunchParams] = useState<AIChatLaunchParams | undefined>();
@@ -1340,6 +1344,8 @@ export function RootNavigator({
         weatherMode={weatherMode}
         menuVisible={menuVisible}
         onMenuVisibleChange={setMenuVisible}
+        whisperActive={whisperActive}
+        onWhisperActiveChange={onWhisperActiveChange}
       />
       {assistantOverlay}
     </>

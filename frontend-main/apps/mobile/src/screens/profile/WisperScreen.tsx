@@ -23,11 +23,11 @@ import ContactsIcon from '../../../assets/icons/whisper/contacts-book-3-line.svg
 import EditPenIcon from '../../../assets/icons/whisper/edit-pen.svg';
 import MoreIcon from '../../../assets/icons/whisper/more-icon.svg';
 import PlusIconWhite from '../../../assets/icons/whisper/plus-icon-white.svg';
-import SpeakIcon from '../../../assets/icons/whisper/speak-line-#002AFF.svg';
 import DiamondIcon from '../../../assets/icons/whisper/vip-diamond-line.svg';
 import { companionAvatarImage } from '../../assets/images';
 import { FooterWithMenu } from '../../components/navigation/FooterWithMenu';
 import { colors } from '../../constants/colors';
+import VolumeSOSServiceModule from '../../modules/VolumeSOSService/VolumeSOSServiceModule';
 import { styles as themeStyles } from '../../theme/styles';
 import {
   fetchEmergencyContacts,
@@ -72,7 +72,7 @@ const compactStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginLeft: 72,
-    marginBottom: 24,
+    marginBottom: 4,
     flexShrink: 0,
   },
   profileSectionTitle: {
@@ -88,14 +88,14 @@ const compactStyles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     flex: 0,
-    paddingTop: 0,
+    paddingTop: 60,
     paddingBottom: 20,
   },
   profileWhisperForm: {
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 16,
-    marginTop: 72,
+    marginTop: 8,
     marginBottom: 16,
     shadowOpacity: 0.05,
     elevation: 1,
@@ -227,6 +227,13 @@ export function WisperScreen({
   const [sosTriggering, setSosTriggering] = useState(false);
   const [volumeTrigger, setVolumeTrigger] = useState<'up' | 'down' | 'both'>('both');
   const [isVolumeTriggerOpen, setIsVolumeTriggerOpen] = useState(false);
+  const [codeWord, setCodeWord] = useState('"banana banana"');
+  const [codeWordInput, setCodeWordInput] = useState('');
+  const [codeWordFormOpen, setCodeWordFormOpen] = useState<'edit' | 'add' | null>(null);
+
+  useEffect(() => {
+    VolumeSOSServiceModule.setVolumeTriggerButton(volumeTrigger);
+  }, [volumeTrigger]);
   const dropdownTranslateY = useRef(new Animated.Value(330)).current;
 
   useEffect(() => {
@@ -467,15 +474,6 @@ const toggleSetting = (title: string) => {
         showsVerticalScrollIndicator={false}
       >
         <Animated.View style={{ transform: [{ translateY: dropdownTranslateY }] }}>
-          {/* ===== Header ===== */}
-          <View style={[styles.profileHero, styles.profileHeroCompact]}>
-            <View style={localStyles.whisperHeaderRow}>
-              <View style={[styles.profilePageToggle, styles.profilePageToggleCompact]}>
-                <SpeakIcon color={colors.blue} height={20} width={20} />
-                <Text style={styles.profilePageToggleText}>Whisper</Text>
-              </View>
-            </View>
-          </View>
 
           <View style={styles.profileWhisperMain}>
             <View style={styles.profileSectionHeading}>
@@ -540,18 +538,31 @@ const toggleSetting = (title: string) => {
               </WhisperSection>
 
               <WhisperSection icon={<DiamondIcon height={20} width={20} />} title="Code Word">
-                <View style={localStyles.codeWordCard}>
-                  <View>
-                    <Text style={localStyles.helperText}>Emergency Code Word</Text>
-                    <Text style={localStyles.codeWordText}>"banana banana"</Text>
-                  </View>
-                  <View style={localStyles.codeWordActions}>
-                    <SmallActionButton icon={<EditPenIcon height={13} width={13} />} label="Edit" />
-                    <SmallActionButton
-                      icon={<PlusIconWhite height={13} width={13} />}
-                      label="Add"
-                      variant="primary"
-                    />
+                <View style={localStyles.codeWordWrapper}>
+                  <View style={localStyles.codeWordCard}>
+                    <View>
+                      <Text style={localStyles.helperText}>Emergency Code Word</Text>
+                      <Text style={localStyles.codeWordText}>{codeWord}</Text>
+                    </View>
+                    <View style={localStyles.codeWordActions}>
+                      <SmallActionButton
+                        icon={<EditPenIcon height={13} width={13} />}
+                        label="Edit"
+                        onPress={() => {
+                          setCodeWordInput(codeWord);
+                          setCodeWordFormOpen(codeWordFormOpen === 'edit' ? null : 'edit');
+                        }}
+                      />
+                      <SmallActionButton
+                        icon={<PlusIconWhite height={13} width={13} />}
+                        label="Add"
+                        variant="primary"
+                        onPress={() => {
+                          setCodeWordInput('');
+                          setCodeWordFormOpen(codeWordFormOpen === 'add' ? null : 'add');
+                        }}
+                      />
+                    </View>
                   </View>
                 </View>
               </WhisperSection>
@@ -711,6 +722,47 @@ const toggleSetting = (title: string) => {
       />
 
 
+      {/* Code Word Modal */}
+      <Modal
+        animationType="fade"
+        transparent
+        visible={codeWordFormOpen !== null}
+        onRequestClose={() => setCodeWordFormOpen(null)}
+      >
+        <Pressable style={localStyles.dialogOverlay} onPress={() => setCodeWordFormOpen(null)}>
+          <Pressable style={localStyles.dialogCard} onPress={(e) => e.stopPropagation()}>
+            <Text style={localStyles.dialogTitle}>
+              {codeWordFormOpen === 'edit' ? 'Edit Code Word' : 'Add Code Word'}
+            </Text>
+            <TextInput
+              autoFocus
+              placeholder='e.g. "red umbrella"'
+              placeholderTextColor="#9CA3AF"
+              style={localStyles.codeWordFormInput}
+              value={codeWordInput}
+              onChangeText={setCodeWordInput}
+            />
+            <View style={localStyles.codeWordFormActions}>
+              <Pressable
+                style={({ pressed }) => [localStyles.codeWordFormCancel, pressed && styles.pressedFeedback]}
+                onPress={() => setCodeWordFormOpen(null)}
+              >
+                <Text style={localStyles.codeWordFormCancelText}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [localStyles.codeWordFormSave, pressed && styles.pressedFeedback]}
+                onPress={() => {
+                  if (codeWordInput.trim()) setCodeWord(codeWordInput.trim());
+                  setCodeWordFormOpen(null);
+                }}
+              >
+                <Text style={localStyles.codeWordFormSaveText}>Save</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
+
       {/* Add Contact Modal */}
       <ContactFormModal
         visible={isAddContactModalOpen}
@@ -796,11 +848,11 @@ function ContactFormModal({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
-      <Pressable style={localStyles.modalOverlay} onPress={onClose}>
-        <Pressable style={localStyles.modalContent} onPress={(e) => e.stopPropagation()}>
+    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
+      <Pressable style={localStyles.dialogOverlay} onPress={onClose}>
+        <Pressable style={localStyles.dialogCard} onPress={(e) => e.stopPropagation()}>
           <View style={localStyles.modalHeader}>
-            <Text style={localStyles.modalTitle}>{title}</Text>
+            <Text style={localStyles.dialogTitle}>{title}</Text>
             <Pressable onPress={onClose} style={localStyles.modalCloseButton}>
               <CloseIcon />
             </Pressable>
@@ -903,10 +955,12 @@ function WhisperSection({
 function SmallActionButton({
   icon,
   label,
+  onPress,
   variant = 'secondary',
 }: {
   icon: ReactNode;
   label: string;
+  onPress?: () => void;
   variant?: 'primary' | 'secondary';
 }) {
   const isPrimary = variant === 'primary';
@@ -914,6 +968,7 @@ function SmallActionButton({
   return (
     <Pressable
       accessibilityRole="button"
+      onPress={onPress}
       style={({ pressed }) => [
         localStyles.smallButton,
         isPrimary ? localStyles.smallButtonPrimary : localStyles.smallButtonSecondary,
@@ -1441,50 +1496,52 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     color: colors.ink,
   },
   modalCloseButton: {
-    padding: 4,
+    padding: 2,
   },
   modalBody: {
-    padding: 20,
+    padding: 14,
   },
   formField: {
-    marginBottom: 16,
+    marginBottom: 10,
   },
   formLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '500',
     color: colors.ink,
-    marginBottom: 8,
+    marginBottom: 4,
   },
   formInput: {
     borderWidth: 1,
     borderColor: '#D1D5DB',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 15,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontSize: 13,
     color: colors.ink,
   },
   modalFooter: {
     flexDirection: 'row',
-    gap: 12,
-    padding: 20,
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
   },
   modalButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingVertical: 8,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1499,16 +1556,104 @@ const localStyles = StyleSheet.create({
   },
   modalButtonTextPrimary: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
   },
   modalButtonTextSecondary: {
     color: colors.ink,
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '500',
   },
   volumeTriggerToggle: {
-    alignSelf: 'flex-start',
+    alignSelf: 'flex-end',
+  },
+
+  // ===== Shared dialog overlay & card =====
+  dialogOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  dialogCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  dialogTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.ink,
+    marginBottom: 10,
+  },
+
+  // ===== Code Word inline form =====
+  codeWordWrapper: {
+    position: 'relative',
+    zIndex: 5,
+  },
+  codeWordInlineForm: {
+    marginTop: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  codeWordFormLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.ink,
+    marginBottom: 8,
+  },
+  codeWordFormInput: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    fontSize: 13,
+    color: colors.ink,
+    marginBottom: 8,
+  },
+  codeWordFormActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 8,
+  },
+  codeWordFormCancel: {
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+  },
+  codeWordFormCancelText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.ink,
+  },
+  codeWordFormSave: {
+    paddingVertical: 7,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    backgroundColor: colors.blue,
+  },
+  codeWordFormSaveText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
   volumePickerCard: {
     height: 125,
@@ -1519,9 +1664,13 @@ const localStyles = StyleSheet.create({
     fontWeight: '600',
   },
   volumePickerWrapper: {
-    alignSelf: 'flex-start',
+    alignItems: 'flex-end',
+    position: 'relative',
+    zIndex: 10,
   },
   volumeInlineMenu: {
+    position: 'absolute',
+    top: '100%',
     marginTop: 4,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
@@ -1534,6 +1683,7 @@ const localStyles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 6,
     elevation: 4,
+    zIndex: 10,
   },
   volumeInlineOption: {
     paddingHorizontal: 16,
